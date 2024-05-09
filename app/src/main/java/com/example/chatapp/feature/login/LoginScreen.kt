@@ -15,12 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.theme.Primary
 
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController = rememberNavController()) {
     val context = LocalContext.current
     Scaffold(
         topBar = {
@@ -46,6 +49,8 @@ fun LoginScreen() {
                         "Signed in successfully with email: ${firebaseUser.email}",
                         Toast.LENGTH_LONG
                     ).show()
+                    navController.navigate(Screen.EditProfile.name)
+
             },
                 onError = { exception ->
                     Toast.makeText(
