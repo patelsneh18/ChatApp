@@ -49,7 +49,7 @@ fun LoginScreen(navController: NavController = rememberNavController()) {
                         "Signed in successfully with email: ${firebaseUser.email}",
                         Toast.LENGTH_LONG
                     ).show()
-                    navController.navigate(Screen.EditProfile.name)
+                    navController.navigate(Screen.EditProfile.name + "?email=${firebaseUser.email}")
 
             },
                 onError = { exception ->

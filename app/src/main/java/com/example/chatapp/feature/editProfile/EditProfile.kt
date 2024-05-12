@@ -1,5 +1,6 @@
 package com.example.chatapp.feature.editProfile
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,7 +28,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditProfileScreen() {
+fun EditProfileScreen(email: String) {
 
     var name by remember {
         mutableStateOf("")
@@ -55,13 +56,23 @@ fun EditProfileScreen() {
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
-                .padding(paddingValues)) {
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
 
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text(text = "Name") }
+            )
+
+            OutlinedTextField(
+                value = email,
+                onValueChange = {},
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text(text = "Email") },
+                enabled = false
             )
 
             val scope = rememberCoroutineScope()
