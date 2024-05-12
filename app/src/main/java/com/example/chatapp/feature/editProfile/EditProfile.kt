@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -25,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.chatapp.domain.model.Gender
+import com.streamliners.compose.comp.select.RadioGroup
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,8 +93,22 @@ fun EditProfileScreen(email: String) {
                 label = { Text(text = "Bio") }
             )
 
-            
+            Card {
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                        .fillMaxWidth()
+                ) {
+                    RadioGroup(
+                        title = "Gender",
+                        state = gender,
+                        options = Gender.entries.toList(),
+                        labelExtractor = { it.name }
+                    )
+                }
+            }
 
+            
             val scope = rememberCoroutineScope()
             Button(
                 modifier = Modifier
