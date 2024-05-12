@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.chatapp.domain.model.Gender
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,6 +33,14 @@ fun EditProfileScreen(email: String) {
 
     var name by remember {
         mutableStateOf("")
+    }
+
+    var bio by remember {
+        mutableStateOf("")
+    }
+
+    val gender = remember {
+        mutableStateOf<Gender?>(null)
     }
 
     val snackBarHostState = remember {
@@ -75,9 +84,19 @@ fun EditProfileScreen(email: String) {
                 enabled = false
             )
 
+            OutlinedTextField(
+                value = bio,
+                onValueChange = { bio = it},
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text(text = "Bio") }
+            )
+
+            
+
             val scope = rememberCoroutineScope()
             Button(
-                modifier = Modifier.padding(top = 24.dp)
+                modifier = Modifier
+                    .padding(top = 24.dp)
                     .align(Alignment.CenterHorizontally),
                 onClick = {
                     if (name.isNotBlank()) {

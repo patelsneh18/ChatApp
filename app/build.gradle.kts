@@ -5,6 +5,12 @@ plugins {
     alias(libs.plugins.googleServices)
 }
 
+configurations {
+    "implementation" {
+        exclude("org.jetbrains.compose.material", "material-desktop")
+    }
+}
+
 android {
     namespace = "com.example.chatapp"
     compileSdk = 34
@@ -62,6 +68,9 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
     implementation(libs.android.navigation.compose)
+
+    //Droid libs
+    implementation(libs.droidlibs.compose.android)
 
     //Firebase
     implementation(platform(libs.firebase.bom))
