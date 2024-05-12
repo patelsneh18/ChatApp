@@ -1,5 +1,16 @@
 package com.example.chatapp.ui
 
-enum class Screen {
-    Splash, Login, EditProfile
+sealed class Screen(
+    val route: String
+) {
+    data object Splash : Screen("Splash")
+    data object Login : Screen("Login")
+    class EditProfile(
+        val email: String
+    ) : Screen("EditProfile?email=$email") {
+
+        companion object {
+            fun format() = "EditProfile?email={email}"
+        }
+    }
 }

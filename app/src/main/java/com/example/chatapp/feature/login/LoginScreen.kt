@@ -44,13 +44,15 @@ fun LoginScreen(navController: NavController = rememberNavController()) {
         ) {
             SignInWithGoogleButton(
                 onSuccess = { firebaseUser ->
+                    val email = firebaseUser.email ?: error("Email not found")
+
                     Toast.makeText(
                         context,
                         "Signed in successfully with email: ${firebaseUser.email}",
                         Toast.LENGTH_LONG
                     ).show()
-                    navController.navigate(Screen.EditProfile.name + "?email=${firebaseUser.email}")
 
+                    navController.navigate(Screen.EditProfile(email).route)
             },
                 onError = { exception ->
                     Toast.makeText(
