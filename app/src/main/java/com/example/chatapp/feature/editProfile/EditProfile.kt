@@ -26,8 +26,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.chatapp.domain.model.Gender
 import com.example.chatapp.domain.model.User
+import com.example.chatapp.ui.Screen
 import com.streamliners.compose.comp.select.RadioGroup
 import com.streamliners.compose.comp.textInput.TextInputLayout
 import com.streamliners.compose.comp.textInput.config.InputConfig
@@ -41,7 +43,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun EditProfileScreen(
     email: String,
-    viewModel: EditProfileViewModel
+    viewModel: EditProfileViewModel,
+    navController: NavHostController
 ) {
 
     val nameInput = remember {
@@ -156,6 +159,7 @@ fun EditProfileScreen(
                                 scope.launch {
                                     snackBarHostState.showSnackbar("Registration successful")
                                 }
+                                navController.navigate(Screen.Home.route)
                             }
                         }
 

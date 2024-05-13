@@ -78,6 +78,13 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.ui.auth)
 
+    //datastore
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.gson)
+
+    //koin
+    implementation(libs.koin.android)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -3,10 +3,12 @@ agp = "8.4.0"
 droidlibs = "1.2.13"
 firebaseAnalytics = "1.0.0"
 firebaseUiAuth = "7.2.0"
+koinAndroid = "3.5.3"
 kotlin = "1.9.0"
 googleServices = "4.4.1"
 core-ktx = "1.12.0"
 junit = "4.13.2"
+gson = "2.10.1"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 lifecycle-runtime-ktx = "2.7.0"
@@ -16,6 +18,7 @@ firebase-bom = "33.0.0"
 firebaseAuthKtx = "23.0.0"
 navigation-compose = "2.7.7"
 firebase-firestore = "33.0.0"
+datastore-core = "1.0.0"
 [libraries]
 droidlibs-compose-android = { module = "com.github.The-Streamliners.DroidLibs:compose-android", version.ref = "droidlibs" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -25,10 +28,16 @@ firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore"}
 firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version.ref = "firebaseUiAuth" }
 
+androidx-datastore-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore-core"}
+gson = { module = "com.google.code.gson:gson", version.ref = "gson"}
+
 android-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation-compose"}
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+
+koin-android = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroid" }
+
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
