@@ -17,6 +17,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,25 +27,58 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.chatapp.domain.model.Gender
+import com.example.chatapp.domain.model.User
 import com.streamliners.compose.comp.select.RadioGroup
+import com.streamliners.compose.comp.textInput.TextInputLayout
+import com.streamliners.compose.comp.textInput.config.InputConfig
+import com.streamliners.compose.comp.textInput.config.text
+import com.streamliners.compose.comp.textInput.state.TextInputState
+import com.streamliners.compose.comp.textInput.state.allHaveValidInputs
+import com.streamliners.compose.comp.textInput.state.value
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditProfileScreen(email: String) {
+fun EditProfileScreen(
+    email: String,
+    viewModel: EditProfileViewModel
+) {
 
-    var name by remember {
-        mutableStateOf("")
+    val nameInput = remember {
+        mutableStateOf(
+            TextInputState(
+                label = "Name",
+                inputConfig = InputConfig.text {
+                    minLength = 3
+                    maxLength = 25
+                }
+            )
+        )
     }
 
-    var bio by remember {
-        mutableStateOf("")
+    val bioInput = remember {
+        mutableStateOf(
+            TextInputState(
+                label = "Bio",
+                inputConfig = InputConfig.text {
+                    minLength = 5
+                    maxLength = 50
+                }
+            )
+        )
     }
 
     val gender = remember {
         mutableStateOf<Gender?>(null)
     }
 
+    var genderError by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(key1 = gender.value) {
+        if (gender.value != null) genderError = false
+    }
     val snackBarHostState = remember {
         SnackbarHostState()
     }
@@ -71,12 +105,7 @@ fun EditProfileScreen(email: String) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
-            OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(text = "Name") }
-            )
+            TextInputLayout(state = nameInput)
 
             OutlinedTextField(
                 value = email,
@@ -86,12 +115,7 @@ fun EditProfileScreen(email: String) {
                 enabled = false
             )
 
-            OutlinedTextField(
-                value = bio,
-                onValueChange = { bio = it},
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(text = "Bio") }
-            )
+            TextInputLayout(state = bioInput)
 
             Card {
                 Column(
@@ -105,6 +129,8 @@ fun EditProfileScreen(email: String) {
                         options = Gender.entries.toList(),
                         labelExtractor = { it.name }
                     )
+
+                    if (genderError) Text(text = "Required!")
                 }
             }
 
@@ -115,11 +141,26 @@ fun EditProfileScreen(email: String) {
                     .padding(top = 24.dp)
                     .align(Alignment.CenterHorizontally),
                 onClick = {
-                    if (name.isNotBlank()) {
-                        scope.launch {
-                            snackBarHostState.showSnackbar("Your name is $name")
+                    if(TextInputState.allHaveValidInputs(
+                        nameInput, bioInput
+                    ) && gender.value != null) {
+
+                        gender.value?.let {
+                            val user = User(
+                                name = nameInput.value(),
+                                email = email,
+                                bio = bioInput.value(),
+                                gender = it
+                            )
+                            viewModel.saveUser(user) {
+                                scope.launch {
+                                    snackBarHostState.showSnackbar("Registration successful")
+                                }
+                            }
                         }
+
                     }
+                    if (gender.value == null) genderError = true
                 }
             ) {
                 Text(text = "Save")

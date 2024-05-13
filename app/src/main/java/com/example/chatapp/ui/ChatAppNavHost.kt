@@ -1,6 +1,7 @@
 package com.example.chatapp.ui
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,7 +33,8 @@ fun ChatAppNavHost() {
         ) {
             val email = it.arguments?.getString("email") ?: error("Email argument not passed")
             EditProfileScreen(
-                email
+                email,
+                viewModel()
             )
         }
     }

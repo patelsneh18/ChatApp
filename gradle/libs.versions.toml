@@ -15,14 +15,14 @@ compose-bom = "2023.08.00"
 firebase-bom = "33.0.0"
 firebaseAuthKtx = "23.0.0"
 navigation-compose = "2.7.7"
-
+firebase-firestore = "33.0.0"
 [libraries]
 droidlibs-compose-android = { module = "com.github.The-Streamliners.DroidLibs:compose-android", version.ref = "droidlibs" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 
-firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebaseAnalytics" }
-firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAnalytics" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore"}
 firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version.ref = "firebaseUiAuth" }
 
 android-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation-compose"}
