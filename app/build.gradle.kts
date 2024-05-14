@@ -5,12 +5,6 @@ plugins {
     alias(libs.plugins.googleServices)
 }
 
-configurations {
-    "implementation" {
-        exclude("org.jetbrains.compose.material", "material-desktop")
-    }
-}
-
 android {
     namespace = "com.example.chatapp"
     compileSdk = 34
@@ -54,6 +48,12 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+}
+
+configurations {
+    "implementation" {
+        exclude("org.jetbrains.compose.material", "material-desktop")
     }
 }
 

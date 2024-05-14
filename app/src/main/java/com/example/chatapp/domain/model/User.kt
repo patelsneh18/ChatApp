@@ -9,4 +9,6 @@ data class User(
     var email: String,
     var bio: String,
     var gender: Gender
-)
+) {
+    constructor() : this(id = null, name = "", email = "", bio = "", gender = Gender.Male)
+}

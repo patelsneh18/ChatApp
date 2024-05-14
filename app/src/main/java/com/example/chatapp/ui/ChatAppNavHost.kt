@@ -15,13 +15,13 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ChatAppNavHost() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.Login.route) {
+    NavHost(navController = navController, startDestination = Screen.Splash.route) {
         composable(Screen.Splash.route) {
             SplashScreen(koinViewModel(), navController)
         }
 
         composable(Screen.Login.route) {
-            LoginScreen(navController)
+            LoginScreen(navController, koinViewModel())
         }
 
         composable(
