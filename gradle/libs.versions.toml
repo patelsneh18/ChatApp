@@ -1,5 +1,6 @@
 [versions]
 agp = "8.4.0"
+coilCompose = "2.4.0"
 droidlibs = "1.2.13"
 firebaseAnalytics = "1.0.0"
 firebaseUiAuth = "7.2.0"
@@ -16,11 +17,14 @@ activity-compose = "1.8.2"
 compose-bom = "2023.08.00"
 firebase-bom = "33.0.0"
 firebaseAuthKtx = "23.0.0"
+materialIconsExtended = "1.6.7"
 navigation-compose = "2.7.7"
 firebase-firestore = "33.0.0"
 datastore-core = "1.0.0"
 
 [libraries]
+androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 droidlibs-compose-android = { module = "com.github.The-Streamliners.DroidLibs:compose-android", version.ref = "droidlibs" }
 droidlibs-pickers = { module = "com.github.The-Streamliners.DroidLibs:pickers", version.ref = "droidlibs" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -50,7 +54,6 @@ ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
-firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

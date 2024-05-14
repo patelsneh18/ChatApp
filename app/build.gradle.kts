@@ -69,6 +69,12 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.android.navigation.compose)
 
+    //Icons
+    implementation (libs.androidx.material.icons.extended)
+
+    //Coil
+    implementation(libs.coil.compose)
+
     //Droid libs
     implementation(libs.droidlibs.compose.android)
     implementation(libs.droidlibs.pickers)
