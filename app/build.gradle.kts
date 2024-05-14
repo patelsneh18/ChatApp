@@ -71,6 +71,7 @@ dependencies {
 
     //Droid libs
     implementation(libs.droidlibs.compose.android)
+    implementation(libs.droidlibs.pickers)
 
     //Firebase
     implementation(platform(libs.firebase.bom))
