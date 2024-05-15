@@ -7,8 +7,9 @@ data class User(
     val id: String? = null,
     var name: String,
     var email: String,
+    val profileImageUrl: String?,
     var bio: String,
     var gender: Gender
 ) {
-    constructor() : this(id = null, name = "", email = "", bio = "", gender = Gender.Male)
+    constructor() : this(id = null, name = "", email = "", profileImageUrl = "", bio = "", gender = Gender.Male)
 }
