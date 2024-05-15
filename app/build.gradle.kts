@@ -40,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -78,6 +79,8 @@ dependencies {
     //Droid libs
     implementation(libs.droidlibs.compose.android)
     implementation(libs.droidlibs.pickers)
+    implementation(libs.droidlibs.base)
+    implementation(libs.droidlibs.utils)
 
     //Firebase
     implementation(platform(libs.firebase.bom))

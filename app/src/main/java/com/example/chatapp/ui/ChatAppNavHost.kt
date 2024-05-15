@@ -6,14 +6,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.chatapp.MainActivity
 import com.example.chatapp.feature.editProfile.EditProfileScreen
 import com.example.chatapp.feature.home.HomeScreen
 import com.example.chatapp.feature.login.LoginScreen
 import com.example.chatapp.feature.splash.SplashScreen
+import com.streamliners.pickers.date.showDatePickerDialog
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ChatAppNavHost() {
+fun MainActivity.ChatAppNavHost() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.Splash.route) {
         composable(Screen.Splash.route) {
@@ -36,7 +38,8 @@ fun ChatAppNavHost() {
             EditProfileScreen(
                 email,
                 koinViewModel(),
-                navController
+                navController,
+                ::showDatePickerDialog
             )
         }
 

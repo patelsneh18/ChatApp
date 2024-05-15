@@ -18,8 +18,11 @@ import com.example.chatapp.feature.splash.SplashScreen
 import com.example.chatapp.ui.ChatAppNavHost
 import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.theme.ChatAppTheme
+import com.google.firebase.BuildConfig
+import com.streamliners.base.BaseActivity
 
-class MainActivity : ComponentActivity() {
+class MainActivity : BaseActivity() {
+    override var buildType: String = BuildConfig.BUILD_TYPE
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

@@ -9,7 +9,8 @@ data class User(
     var email: String,
     val profileImageUrl: String?,
     var bio: String,
-    var gender: Gender
+    var gender: Gender,
+    var dob: String?
 ) {
-    constructor() : this(id = null, name = "", email = "", profileImageUrl = "", bio = "", gender = Gender.Male)
+    constructor() : this(id = null, name = "", email = "", profileImageUrl = "", bio = "", gender = Gender.Male, dob = null)
 }

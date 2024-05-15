@@ -1,5 +1,7 @@
 package com.example.chatapp.feature.editProfile
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +18,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -25,6 +28,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.chatapp.domain.model.Gender
@@ -32,6 +36,7 @@ import com.example.chatapp.domain.model.User
 import com.example.chatapp.feature.editProfile.comp.AddImageButton
 import com.example.chatapp.feature.editProfile.comp.ProfileImage
 import com.example.chatapp.ui.Screen
+import com.example.chatapp.ui.theme.Primary
 import com.streamliners.compose.comp.select.RadioGroup
 import com.streamliners.compose.comp.textInput.TextInputLayout
 import com.streamliners.compose.comp.textInput.config.InputConfig
@@ -39,12 +44,16 @@ import com.streamliners.compose.comp.textInput.config.text
 import com.streamliners.compose.comp.textInput.state.TextInputState
 import com.streamliners.compose.comp.textInput.state.allHaveValidInputs
 import com.streamliners.compose.comp.textInput.state.value
+import com.streamliners.compose.ext.noRippleClickable
+import com.streamliners.pickers.date.DatePickerDialog
+import com.streamliners.pickers.date.ShowDatePicker
 import com.streamliners.pickers.media.FromGalleryType
 import com.streamliners.pickers.media.MediaPickerDialog
 import com.streamliners.pickers.media.MediaPickerDialogState
 import com.streamliners.pickers.media.MediaType
 import com.streamliners.pickers.media.PickedMedia
 import com.streamliners.pickers.media.rememberMediaPickerDialogState
+import com.streamliners.utils.DateTimeUtils
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,7 +61,8 @@ import kotlinx.coroutines.launch
 fun EditProfileScreen(
     email: String,
     viewModel: EditProfileViewModel,
-    navController: NavHostController
+    navController: NavHostController,
+    showDatePicker: ShowDatePicker
 ) {
 
     val snackBarHostState = remember {
@@ -62,11 +72,15 @@ fun EditProfileScreen(
     val scope = rememberCoroutineScope()
 
     val mediaPickerDialogState = rememberMediaPickerDialogState()
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Profile") }
+                title = { Text(text = "Profile") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Primary,
+                    titleContentColor = Color.White
+                )
             )
         },
         snackbarHost = {
@@ -109,6 +123,10 @@ fun EditProfileScreen(
             mutableStateOf(false)
         }
 
+        var dob by remember {
+            mutableStateOf<String?>(null)
+        }
+
         LaunchedEffect(key1 = gender.value) {
             if (gender.value != null) genderError = false
         }
@@ -132,7 +150,7 @@ fun EditProfileScreen(
                     type = MediaType.Image,
                     allowMultiple = false,
                     fromGalleryType = FromGalleryType.VisualMediaPicker
-                ) {getList ->
+                ) { getList ->
                     scope.launch {
                         val list = getList()
                         list.firstOrNull()?.let {
@@ -145,8 +163,9 @@ fun EditProfileScreen(
                 ProfileImage(
                     pickedMedia = it,
                     initImagePicker,
-                    Modifier.align(Alignment.CenterHorizontally))
-            } ?: AddImageButton (
+                    Modifier.align(Alignment.CenterHorizontally)
+                )
+            } ?: AddImageButton(
                 initImagePicker,
                 Modifier.align(Alignment.CenterHorizontally)
             )
@@ -180,14 +199,37 @@ fun EditProfileScreen(
                 }
             }
 
+            // TODO DOB MIN MAX
+            // TODO Make DOB Compulsory
+            OutlinedTextField(
+                value = dob ?: "",
+                onValueChange = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        showDatePicker(
+                            DatePickerDialog.Params(
+                                format = DateTimeUtils.Format.DATE_MONTH_YEAR_2,
+                                prefill = dob,
+                                onPicked = { date ->
+                                    dob = date
+                                }
+                            )
+                        )
+                    },
+                label = { Text(text = "Email") },
+                enabled = false
+            )
+
             Button(
                 modifier = Modifier
                     .padding(top = 24.dp)
                     .align(Alignment.CenterHorizontally),
                 onClick = {
-                    if(TextInputState.allHaveValidInputs(
-                        nameInput, bioInput
-                    ) && gender.value != null) {
+                    if (TextInputState.allHaveValidInputs(
+                            nameInput, bioInput
+                        ) && gender.value != null
+                    ) {
 
                         gender.value?.let {
                             val user = User(
@@ -195,7 +237,8 @@ fun EditProfileScreen(
                                 email = email,
                                 profileImageUrl = null,
                                 bio = bioInput.value(),
-                                gender = it
+                                gender = it,
+                                dob = dob
                             )
                             viewModel.saveUser(user, image.value) {
                                 scope.launch {
@@ -214,5 +257,8 @@ fun EditProfileScreen(
         }
     }
 
-    MediaPickerDialog(state = mediaPickerDialogState, authority = "com.example.chatapp.fileprovider")
+    MediaPickerDialog(
+        state = mediaPickerDialogState,
+        authority = "com.example.chatapp.fileprovider"
+    )
 }
