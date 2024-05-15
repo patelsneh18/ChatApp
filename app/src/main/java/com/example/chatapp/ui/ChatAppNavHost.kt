@@ -11,6 +11,7 @@ import com.example.chatapp.feature.editProfile.EditProfileScreen
 import com.example.chatapp.feature.home.HomeScreen
 import com.example.chatapp.feature.login.LoginScreen
 import com.example.chatapp.feature.splash.SplashScreen
+import com.streamliners.base.ext.koinBaseViewModel
 import com.streamliners.pickers.date.showDatePickerDialog
 import org.koin.androidx.compose.koinViewModel
 
@@ -37,7 +38,7 @@ fun MainActivity.ChatAppNavHost() {
             val email = it.arguments?.getString("email") ?: error("Email argument not passed")
             EditProfileScreen(
                 email,
-                koinViewModel(),
+                koinBaseViewModel(),
                 navController,
                 ::showDatePickerDialog
             )

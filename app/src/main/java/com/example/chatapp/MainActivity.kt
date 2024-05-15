@@ -20,6 +20,7 @@ import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.theme.ChatAppTheme
 import com.google.firebase.BuildConfig
 import com.streamliners.base.BaseActivity
+import com.streamliners.base.uiEvent.UiEventDialogs
 
 class MainActivity : BaseActivity() {
     override var buildType: String = BuildConfig.BUILD_TYPE
@@ -33,6 +34,7 @@ class MainActivity : BaseActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     ChatAppNavHost()
+                    UiEventDialogs()
                 }
             }
         }

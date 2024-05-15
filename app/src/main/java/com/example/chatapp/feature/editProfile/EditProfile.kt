@@ -37,6 +37,7 @@ import com.example.chatapp.feature.editProfile.comp.AddImageButton
 import com.example.chatapp.feature.editProfile.comp.ProfileImage
 import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.theme.Primary
+import com.streamliners.base.taskState.comp.TaskLoadingButton
 import com.streamliners.compose.comp.select.RadioGroup
 import com.streamliners.compose.comp.textInput.TextInputLayout
 import com.streamliners.compose.comp.textInput.config.InputConfig
@@ -217,14 +218,16 @@ fun EditProfileScreen(
                             )
                         )
                     },
-                label = { Text(text = "Email") },
+                label = { Text(text = "Date of Birth") },
                 enabled = false
             )
 
-            Button(
+            TaskLoadingButton(
                 modifier = Modifier
                     .padding(top = 24.dp)
                     .align(Alignment.CenterHorizontally),
+                state = viewModel.saveProfileTask,
+                label = "SAVE",
                 onClick = {
                     if (TextInputState.allHaveValidInputs(
                             nameInput, bioInput
@@ -251,9 +254,7 @@ fun EditProfileScreen(
                     }
                     if (gender.value == null) genderError = true
                 }
-            ) {
-                Text(text = "Save")
-            }
+            )
         }
     }
 
