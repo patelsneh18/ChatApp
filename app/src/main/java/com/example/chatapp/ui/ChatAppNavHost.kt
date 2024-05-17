@@ -10,6 +10,7 @@ import com.example.chatapp.MainActivity
 import com.example.chatapp.feature.editProfile.EditProfileScreen
 import com.example.chatapp.feature.home.HomeScreen
 import com.example.chatapp.feature.login.LoginScreen
+import com.example.chatapp.feature.newChat.NewChatScreen
 import com.example.chatapp.feature.splash.SplashScreen
 import com.streamliners.base.ext.koinBaseViewModel
 import com.streamliners.pickers.date.showDatePickerDialog
@@ -45,7 +46,14 @@ fun MainActivity.ChatAppNavHost() {
         }
 
         composable(Screen.Home.route) {
-            HomeScreen()
+            HomeScreen(navController)
+        }
+
+        composable(Screen.NewChat.route) {
+            NewChatScreen(
+                viewModel = koinBaseViewModel(),
+                navController = navController
+            )
         }
     }
 }
