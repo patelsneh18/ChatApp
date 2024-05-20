@@ -10,6 +10,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.chatapp.domain.ext.id
+import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.comp.UserCard
 import com.streamliners.base.taskState.comp.whenLoaded
 import com.streamliners.compose.android.comp.appBar.TitleBarScaffold
@@ -38,7 +40,13 @@ fun NewChatScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(usersList) { user ->
-                    UserCard(user = user)
+                    UserCard(user = user) {
+                        viewModel.onUserSelected(
+                            otherUserId = user.id()
+                        ) { channelId ->
+                            navController.navigate(Screen.Chat(channelId).route)
+                        }
+                    }
                 }
             }
         }

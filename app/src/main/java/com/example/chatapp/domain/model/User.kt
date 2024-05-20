@@ -12,5 +12,5 @@ data class User(
     var gender: Gender,
     var dob: String?
 ) {
-    constructor() : this(id = null, name = "", email = "", profileImageUrl = "", bio = "", gender = Gender.Male, dob = null)
+    constructor() : this(null, "", "",  "", "",Gender.Male, dob = null)
 }

@@ -33,7 +33,8 @@ class EditProfileViewModel @Inject constructor(
                     profileImageUrl = uploadProfileImage(user.email, image)
                 )
                 userRepo.saveUser(updatedUser)
-                localRepo.onLoggedIn(updatedUser)
+                val savedUser = userRepo.getUserWithEmail(user.email) ?: error("No user found")
+                localRepo.onLoggedIn(savedUser)
                 executeOnMain { onSuccess() }
             }
         }

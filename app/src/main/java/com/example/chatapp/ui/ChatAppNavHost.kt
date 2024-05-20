@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.chatapp.MainActivity
+import com.example.chatapp.feature.chat.ChatScreen
 import com.example.chatapp.feature.editProfile.EditProfileScreen
 import com.example.chatapp.feature.home.HomeScreen
 import com.example.chatapp.feature.login.LoginScreen
@@ -46,12 +47,27 @@ fun MainActivity.ChatAppNavHost() {
         }
 
         composable(Screen.Home.route) {
-            HomeScreen(navController)
+            HomeScreen(navController, koinBaseViewModel())
         }
 
         composable(Screen.NewChat.route) {
             NewChatScreen(
                 viewModel = koinBaseViewModel(),
+                navController = navController
+            )
+        }
+
+        composable(
+            Screen.Chat.format(),
+            arguments = listOf(
+                navArgument("channelId") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val channelId = it.arguments?.getString("channelId") ?: error("channelId argument not passed")
+            ChatScreen(
+                channelId = channelId,
                 navController = navController
             )
         }

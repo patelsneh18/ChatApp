@@ -15,4 +15,13 @@ sealed class Screen(
             fun format() = "EditProfile?email={email}"
         }
     }
+
+    class Chat(
+        val channelId: String
+    ) : Screen("Chat?channelId=$channelId") {
+
+        companion object {
+            fun format() = "Chat?channelId={channelId}"
+        }
+    }
 }
