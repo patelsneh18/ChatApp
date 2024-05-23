@@ -1,11 +1,17 @@
 package com.example.chatapp.data.remote
 
+import androidx.compose.runtime.rememberCoroutineScope
 import com.example.chatapp.data.remote.FirestoreCollections.channelsColl
 import com.example.chatapp.domain.model.Channel
 import com.example.chatapp.domain.model.Message
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class ChannelRepo {
@@ -72,6 +78,24 @@ class ChannelRepo {
             ?: error("No channel found with ID $channelId")
     }
 
+    suspend fun subscribeToChannel(channelId: String): Flow<Channel> {
+        return callbackFlow {
+            val registration = Firebase.firestore
+                .channelsColl()
+                .document(channelId)
+                .addSnapshotListener { snapshot, error ->
+                    error?.let { throw it }
+                    val channel = snapshot?.toObject(Channel::class.java)
+                    channel?.let {
+                        CoroutineScope(coroutineContext).launch {
+                            send(it)
+                        }
+                    }
+                }
+
+            awaitClose { registration.remove() }
+        }
+    }
     suspend fun sendMessage(channelId: String, message: Message) {
         Firebase.firestore
             .channelsColl()
@@ -79,4 +103,5 @@ class ChannelRepo {
             .update(Channel::messages.name, FieldValue.arrayUnion(message))
             .await()
     }
+
 }

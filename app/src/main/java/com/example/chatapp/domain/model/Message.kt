@@ -8,4 +8,6 @@ data class Message(
     val sender: String,
     val message: String,
     val mediaUrl: String?
-)
+) {
+    constructor(): this(Timestamp.now(), "", "", null)
+}

@@ -2,6 +2,7 @@ package com.example.chatapp.feature.chat
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
@@ -20,6 +21,7 @@ import com.streamliners.compose.android.comp.appBar.TitleBarScaffold
 import com.streamliners.compose.comp.textInput.TextInputLayout
 import com.streamliners.compose.comp.textInput.state.TextInputState
 import com.streamliners.compose.comp.textInput.state.ifValidInput
+import com.streamliners.compose.comp.textInput.state.update
 
 @Composable
 fun ChatScreen(
@@ -44,17 +46,21 @@ fun ChatScreen(
         ) {
 
             Column(modifier = Modifier.weight(1f)) {
-                viewModel.channel.whenLoaded { channel ->
-                    MessagesList(channel = channel)
+                viewModel.data.whenLoaded { data ->
+                    MessagesList(data)
                 }
             }
 
             TextInputLayout(
+                modifier = Modifier.padding(horizontal = 16.dp).padding(bottom = 16.dp)
+                    .fillMaxWidth(),
                 state = messageInput,
                 trailingIconButton = {
                     IconButton(onClick = {
                         messageInput.ifValidInput { message ->
-                            viewModel.sendMessage(message)
+                            viewModel.sendMessage(message) {
+                                messageInput.update("")
+                            }
                         }
                     }) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "Send Icon")
