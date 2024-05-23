@@ -4,6 +4,7 @@ import com.example.chatapp.data.LocalRepo
 import com.example.chatapp.data.remote.ChannelRepo
 import com.example.chatapp.data.remote.StorageRepo
 import com.example.chatapp.data.remote.UserRepo
+import com.example.chatapp.feature.chat.ChatViewModel
 import com.example.chatapp.feature.editProfile.EditProfileViewModel
 import com.example.chatapp.feature.home.HomeViewModel
 import com.example.chatapp.feature.login.LoginViewModel
@@ -26,4 +27,5 @@ val viewModelModule = module{
     viewModel { LoginViewModel(get(), get()) }
     viewModel { NewChatViewModel(get(), get(), get()) }
     viewModel { HomeViewModel(get(), get(), get()) }
+    viewModel { ChatViewModel(get(), get()) }
 }

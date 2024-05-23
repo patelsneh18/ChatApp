@@ -2,9 +2,10 @@ package com.example.chatapp.data.remote
 
 import com.example.chatapp.data.remote.FirestoreCollections.channelsColl
 import com.example.chatapp.domain.model.Channel
+import com.example.chatapp.domain.model.Message
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.tasks.await
 
 class ChannelRepo {
@@ -59,5 +60,23 @@ class ChannelRepo {
             .get()
             .await()
             .toObjects(Channel::class.java)
+    }
+
+    suspend fun getChannel(channelId: String): Channel {
+        return Firebase.firestore
+            .channelsColl()
+            .document(channelId)
+            .get()
+            .await()
+            .toObject(Channel::class.java)
+            ?: error("No channel found with ID $channelId")
+    }
+
+    suspend fun sendMessage(channelId: String, message: Message) {
+        Firebase.firestore
+            .channelsColl()
+            .document(channelId)
+            .update(Channel::messages.name, FieldValue.arrayUnion(message))
+            .await()
     }
 }
