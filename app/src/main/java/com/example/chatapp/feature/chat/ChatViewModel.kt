@@ -58,27 +58,36 @@ class ChatViewModel(
     }
 
     fun createChatListItems(channel: Channel, currentUserId: String): List<ChatListItem> {
-        val chatItems = mutableListOf<ChatListItem>()
+        return buildList {
         var prevDateString = ""
-        for (message in channel.messages) {
-            val dateString = DateTimeUtils.formatTime(
-                DateTimeUtils.Format.DATE_MONTH_YEAR_1,
-                message.timestamp.toDate().time
-            )
 
-            if (prevDateString != dateString) {
-                chatItems.add(ChatListItem.Date(dateString))
-                prevDateString = dateString
-            }
+            channel.messages.forEach { message->
+                val dateString = DateTimeUtils.formatTime(
+                    DateTimeUtils.Format.DATE_MONTH_YEAR_1,
+                    message.timestamp.toDate().time
+                )
 
-            val chatListItem = if (message.sender == currentUserId) {
-                ChatListItem.SentMessage(message.timestamp.toString(), message)
-            } else {
-                ChatListItem.ReceivedMessage(message.timestamp.toString(), message)
+                if (prevDateString != dateString) {
+                    add(ChatListItem.Date(dateString))
+                    prevDateString = dateString
+                }
+
+                val chatListItem = if (message.sender == currentUserId) {
+                    ChatListItem.SentMessage(
+                        DateTimeUtils.formatTime(
+                            DateTimeUtils.Format.HOUR_MIN_12,
+                            message.timestamp.toDate().time
+                        ), message)
+                } else {
+                    ChatListItem.ReceivedMessage(
+                        DateTimeUtils.formatTime(
+                            DateTimeUtils.Format.HOUR_MIN_12, message.timestamp.toDate().time
+                        ), message)
+                }
+
+                add(chatListItem)
             }
-            chatItems.add(chatListItem)
         }
-        return chatItems
     }
 
     fun sendMessage(

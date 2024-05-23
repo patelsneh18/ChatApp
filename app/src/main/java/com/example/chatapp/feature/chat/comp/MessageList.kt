@@ -40,13 +40,15 @@ fun MessagesList(data: ChatViewModel.Data) {
                     is Date -> Text(text = chatListItem.date)
                     is ReceivedMessage -> {
                         MessageCard(
-                            message = chatListItem.message
+                            message = chatListItem.message,
+                            time = chatListItem.time
                         )
                     }
 
                     is SentMessage -> {
                         MessageCard(
-                            message = chatListItem.message
+                            message = chatListItem.message,
+                            time = chatListItem.time
                         )
                     }
                 }

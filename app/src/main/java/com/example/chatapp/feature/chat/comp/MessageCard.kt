@@ -31,7 +31,8 @@ import com.streamliners.utils.DateTimeUtils.formatTime
 
 @Composable
 fun MessageCard(
-    message: Message
+    message: Message,
+    time: String
 ) {
     Card {
         Row(
@@ -45,15 +46,8 @@ fun MessageCard(
                 color = Color.Black
             )
 
-            val formattedTime = remember {
-                derivedStateOf {
-                    formatTime(
-                        HOUR_MIN_12, message.timestamp.toDate().time
-                    )
-                }
-            }
             Text(
-                text = formattedTime.value,
+                text = time,
                 style = MaterialTheme.typography.bodyMedium,
                 color = Neutral50
             )
