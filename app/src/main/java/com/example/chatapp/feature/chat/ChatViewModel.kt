@@ -1,7 +1,9 @@
 package com.example.chatapp.feature.chat
 
+import androidx.core.net.toUri
 import com.example.chatapp.data.LocalRepo
 import com.example.chatapp.data.remote.ChannelRepo
+import com.example.chatapp.data.remote.StorageRepo
 import com.example.chatapp.domain.ext.id
 import com.example.chatapp.domain.model.Channel
 import com.example.chatapp.domain.model.Message
@@ -18,7 +20,8 @@ import kotlinx.coroutines.launch
 
 class ChatViewModel(
     private val channelRepo: ChannelRepo,
-    private val localRepo: LocalRepo
+    private val localRepo: LocalRepo,
+    private val storageRepo: StorageRepo
 ) : BaseViewModel() {
 
     sealed class ChatListItem {
@@ -102,6 +105,22 @@ class ChatViewModel(
             )
             channelRepo.sendMessage(data.value().channel.id(), message)
             executeOnMain { onSuccess() }
+        }
+    }
+
+    fun sendImage(uri: String) {
+        execute {
+            val email = localRepo.getLoggedInUser().email
+            val timestamp = System.currentTimeMillis()
+            val imageUrl = storageRepo.saveFile("media/$timestamp-$email.jpg", uri.toUri())
+
+            val message = Message(
+                sender = data.value().user.id(),
+                message = "",
+                mediaUrl = imageUrl
+            )
+
+            channelRepo.sendMessage(data.value().channel.id(), message)
         }
     }
 }

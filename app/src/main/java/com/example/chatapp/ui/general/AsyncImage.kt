@@ -15,10 +15,11 @@ import coil.compose.AsyncImage
 
 @Composable
 fun AsyncImage(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     uri: String,
-    placeholder: Painter?,
-    onClick : (() -> Unit)? = null
+    placeholder: Painter? = null,
+    onClick : (() -> Unit)? = null,
+    contentScale: ContentScale = ContentScale.FillBounds
 ) {
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
@@ -26,12 +27,11 @@ fun AsyncImage(
             .crossfade(true)
             .build(),
         contentDescription = "",
-        contentScale = ContentScale.FillBounds,
-        modifier = modifier.clip(CircleShape)
-            .size(100.dp)
+        contentScale = contentScale,
+        modifier = modifier
             .run {
                 onClick?.let { clickable { it() } } ?: this
             },
-        placeholder = placeholder
+        placeholder = placeholder,
     )
 }
