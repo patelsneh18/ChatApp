@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.chatapp.domain.ext.id
+import com.example.chatapp.helper.navigateTo
 import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.comp.UserCard
 import com.streamliners.base.taskState.comp.whenLoaded
@@ -44,7 +45,10 @@ fun NewChatScreen(
                         viewModel.onUserSelected(
                             otherUserId = user.id()
                         ) { channelId ->
-                            navController.navigate(Screen.Chat(channelId).route)
+                            navController.navigateTo(
+                                Screen.Chat(channelId).route,
+                                Screen.NewChat.route
+                            )
                         }
                     }
                 }

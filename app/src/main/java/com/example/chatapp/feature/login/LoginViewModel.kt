@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.chatapp.data.LocalRepo
 import com.example.chatapp.data.remote.UserRepo
+import com.example.chatapp.helper.navigateTo
 import com.example.chatapp.ui.Screen
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class LoginViewModel @Inject constructor(
                 navController.navigate(Screen.Home.route)
             } else {
                 //navigate to edit profile
-                navController.navigate(Screen.EditProfile(email).route)
+                navController.navigateTo(Screen.EditProfile(email), Screen.Login)
             }
         }
     }

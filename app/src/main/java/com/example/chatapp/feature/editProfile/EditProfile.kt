@@ -35,6 +35,7 @@ import com.example.chatapp.domain.model.Gender
 import com.example.chatapp.domain.model.User
 import com.example.chatapp.feature.editProfile.comp.AddImageButton
 import com.example.chatapp.feature.editProfile.comp.ProfileImage
+import com.example.chatapp.helper.navigateTo
 import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.theme.Primary
 import com.streamliners.base.taskState.comp.TaskLoadingButton
@@ -247,7 +248,7 @@ fun EditProfileScreen(
                                 scope.launch {
                                     snackBarHostState.showSnackbar("Registration successful")
                                 }
-                                navController.navigate(Screen.Home.route)
+                                navController.navigateTo(Screen.Home.route, Screen.EditProfile.format())
                             }
                         }
 
