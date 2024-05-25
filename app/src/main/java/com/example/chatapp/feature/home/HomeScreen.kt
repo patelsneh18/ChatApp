@@ -26,6 +26,7 @@ import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.theme.Primary
 import com.streamliners.base.taskState.comp.whenLoaded
 import com.streamliners.compose.comp.CenterText
+import com.streamliners.helpers.NotificationHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,5 +76,7 @@ fun HomeScreen(
             }
         }
     }
+
+    NotificationHelper.PermissionsSetup()
 }
 

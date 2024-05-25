@@ -24,17 +24,21 @@ datastore-core = "1.0.0"
 
 [libraries]
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 droidlibs-compose-android = { module = "com.github.The-Streamliners.DroidLibs:compose-android", version.ref = "droidlibs" }
 droidlibs-pickers = { module = "com.github.The-Streamliners.DroidLibs:pickers", version.ref = "droidlibs" }
 droidlibs-base = { module = "com.github.The-Streamliners.DroidLibs:base", version.ref = "droidlibs" }
 droidlibs-utils = { module = "com.github.The-Streamliners.DroidLibs:utils", version.ref = "droidlibs" }
+droidlibs-helpers = { module = "com.github.The-Streamliners.DroidLibs:helpers", version.ref = "droidlibs" }
+
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore"}
 firebase-storage = { module = "com.google.firebase:firebase-storage"}
+firebase-messaging = { module = "com.google.firebase:firebase-messaging"}
 firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version.ref = "firebaseUiAuth" }
 
 androidx-datastore-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore-core"}
