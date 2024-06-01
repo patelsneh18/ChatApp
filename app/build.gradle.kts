@@ -48,6 +48,8 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/INDEX.LIST"
+            excludes += "META-INF/DEPENDENCIES"
         }
     }
 }
@@ -58,8 +60,9 @@ configurations {
     }
 }
 
-dependencies {
+val ktor_version: String by project
 
+dependencies {
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
@@ -91,6 +94,12 @@ dependencies {
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.ui.auth)
 
+    //ktor
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+
+    // google auth 2.0
+    implementation(libs.google.auth.library.oauth2.http)
     //datastore
     implementation(libs.androidx.datastore.core)
     implementation(libs.gson)

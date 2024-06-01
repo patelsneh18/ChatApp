@@ -4,6 +4,7 @@ coilCompose = "2.4.0"
 droidlibs = "1.2.14"
 firebaseAnalytics = "1.0.0"
 firebaseUiAuth = "7.2.0"
+googleAuthLibraryOauth2Http = "1.23.0"
 koinAndroid = "3.5.3"
 kotlin = "1.9.0"
 googleServices = "4.4.1"
@@ -12,6 +13,8 @@ junit = "4.13.2"
 gson = "2.10.1"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
+ktorClientCio = "2.3.11"
+ktorClientCore = "2.3.11"
 lifecycle-runtime-ktx = "2.7.0"
 activity-compose = "1.8.2"
 compose-bom = "2023.08.00"
@@ -42,6 +45,7 @@ firebase-messaging = { module = "com.google.firebase:firebase-messaging"}
 firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version.ref = "firebaseUiAuth" }
 
 androidx-datastore-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore-core"}
+google-auth-library-oauth2-http = { module = "com.google.auth:google-auth-library-oauth2-http", version.ref = "googleAuthLibraryOauth2Http" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson"}
 
 android-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation-compose"}
@@ -51,6 +55,8 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 
 koin-android = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroid" }
 
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientCio" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientCore" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }

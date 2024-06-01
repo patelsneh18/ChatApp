@@ -34,4 +34,22 @@ class UserRepo {
             .toObjects(User::class.java)
             .firstOrNull()
     }
+
+    suspend fun getUserWithId(userId: String) : User {
+        return Firebase.firestore
+            .usersColl()
+            .document(userId)
+            .get()
+            .await()
+            .toObject(User::class.java)
+            ?: error("No user found with id: $userId")
+    }
+
+    suspend fun updateFcmToken(token: String, userId: String) {
+        Firebase.firestore
+            .usersColl()
+            .document(userId)
+            .update(User::fcmToken.name, token)
+            .await()
+    }
 }

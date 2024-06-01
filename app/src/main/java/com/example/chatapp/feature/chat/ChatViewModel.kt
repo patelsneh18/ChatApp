@@ -8,6 +8,7 @@ import com.example.chatapp.domain.ext.id
 import com.example.chatapp.domain.model.Channel
 import com.example.chatapp.domain.model.Message
 import com.example.chatapp.domain.model.User
+import com.example.chatapp.domain.usecase.NewMessageNotifier
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
 import com.streamliners.base.ext.executeOnMain
@@ -21,7 +22,8 @@ import kotlinx.coroutines.launch
 class ChatViewModel(
     private val channelRepo: ChannelRepo,
     private val localRepo: LocalRepo,
-    private val storageRepo: StorageRepo
+    private val storageRepo: StorageRepo,
+    private val newMessageNotifier: NewMessageNotifier
 ) : BaseViewModel() {
 
     sealed class ChatListItem {
@@ -62,9 +64,9 @@ class ChatViewModel(
 
     fun createChatListItems(channel: Channel, currentUserId: String): List<ChatListItem> {
         return buildList {
-        var prevDateString = ""
+            var prevDateString = ""
 
-            channel.messages.forEach { message->
+            channel.messages.forEach { message ->
                 val dateString = DateTimeUtils.formatTime(
                     DateTimeUtils.Format.DATE_MONTH_YEAR_1,
                     message.timestamp.toDate().time
@@ -80,12 +82,14 @@ class ChatViewModel(
                         DateTimeUtils.formatTime(
                             DateTimeUtils.Format.HOUR_MIN_12,
                             message.timestamp.toDate().time
-                        ), message)
+                        ), message
+                    )
                 } else {
                     ChatListItem.ReceivedMessage(
                         DateTimeUtils.formatTime(
                             DateTimeUtils.Format.HOUR_MIN_12, message.timestamp.toDate().time
-                        ), message)
+                        ), message
+                    )
                 }
 
                 add(chatListItem)
@@ -104,7 +108,24 @@ class ChatViewModel(
                 mediaUrl = null
             )
             channelRepo.sendMessage(data.value().channel.id(), message)
+            notifyOtherUser(messageStr)
             executeOnMain { onSuccess() }
+        }
+    }
+
+    private fun notifyOtherUser(message: String) {
+        val channel = data.value().channel
+        val user = data.value().user
+        if (channel.type == Channel.Type.OneToOne) {
+            val otherUserId = channel.members.find { it != user.id() }
+                ?: error("otherUserIdNotFound")
+            execute (showLoadingDialog = false){
+                newMessageNotifier.notify(
+                    data.value().user.name,
+                    userId = otherUserId,
+                    message = message
+                )
+            }
         }
     }
 
@@ -119,7 +140,7 @@ class ChatViewModel(
                 message = "",
                 mediaUrl = imageUrl
             )
-
+            notifyOtherUser("Sent an Image")
             channelRepo.sendMessage(data.value().channel.id(), message)
         }
     }
