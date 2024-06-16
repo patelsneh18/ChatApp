@@ -1,7 +1,7 @@
 [versions]
 agp = "8.4.0"
 coilCompose = "2.4.0"
-droidlibs = "1.2.14"
+droidlibs = "1.2.17"
 firebaseAnalytics = "1.0.0"
 firebaseUiAuth = "7.2.0"
 googleAuthLibraryOauth2Http = "1.23.0"

@@ -1,7 +1,6 @@
 package com.example.chatapp.feature.editProfile
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
@@ -38,18 +36,21 @@ import com.example.chatapp.feature.editProfile.comp.ProfileImage
 import com.example.chatapp.helper.navigateTo
 import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.theme.Primary
+import com.mr0xf00.easycrop.AspectRatio
 import com.streamliners.base.taskState.comp.TaskLoadingButton
+import com.streamliners.base.taskState.comp.whenLoaded
 import com.streamliners.compose.comp.select.RadioGroup
 import com.streamliners.compose.comp.textInput.TextInputLayout
 import com.streamliners.compose.comp.textInput.config.InputConfig
 import com.streamliners.compose.comp.textInput.config.text
 import com.streamliners.compose.comp.textInput.state.TextInputState
 import com.streamliners.compose.comp.textInput.state.allHaveValidInputs
+import com.streamliners.compose.comp.textInput.state.update
 import com.streamliners.compose.comp.textInput.state.value
-import com.streamliners.compose.ext.noRippleClickable
 import com.streamliners.pickers.date.DatePickerDialog
 import com.streamliners.pickers.date.ShowDatePicker
 import com.streamliners.pickers.media.FromGalleryType
+import com.streamliners.pickers.media.MediaPickerCropParams
 import com.streamliners.pickers.media.MediaPickerDialog
 import com.streamliners.pickers.media.MediaPickerDialogState
 import com.streamliners.pickers.media.MediaType
@@ -66,6 +67,74 @@ fun EditProfileScreen(
     navController: NavHostController,
     showDatePicker: ShowDatePicker
 ) {
+    val nameInput = remember {
+        mutableStateOf(
+            TextInputState(
+                label = "Name",
+                inputConfig = InputConfig.text {
+                    minLength = 3
+                    maxLength = 25
+                }
+            )
+        )
+    }
+
+    var currUser: User? = null
+    val bioInput = remember {
+        mutableStateOf(
+            TextInputState(
+                label = "Bio",
+                inputConfig = InputConfig.text {
+                    minLength = 5
+                    maxLength = 50
+                }
+            )
+        )
+    }
+
+    val gender = remember {
+        mutableStateOf<Gender?>(null)
+    }
+
+    var genderError by remember {
+        mutableStateOf(false)
+    }
+
+    var dob by remember {
+        mutableStateOf<String?>(null)
+    }
+
+    LaunchedEffect(key1 = gender.value) {
+        if (gender.value != null) genderError = false
+    }
+
+
+    val image = remember {
+        mutableStateOf<PickedMedia?>(null)
+    }
+
+    var updateProfile by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        val lastRoute = navController.previousBackStackEntry?.destination?.route
+            ?: error("no backstack entry found")
+        if (lastRoute.contains("Home")) {
+            updateProfile = true
+            viewModel.getUserDetails(email)
+        }
+    }
+
+    viewModel.getUserTask.whenLoaded { user ->
+        currUser = user
+        nameInput.update(user.name)
+        bioInput.update(user.bio)
+        gender.value = user.gender
+        dob = user.dob
+        if (user.profileImageUrl != null) image.value =
+            PickedMedia.Image(user.profileImageUrl, null)
+    }
 
     val snackBarHostState = remember {
         SnackbarHostState()
@@ -92,52 +161,6 @@ fun EditProfileScreen(
             )
         }
     ) { paddingValues ->
-
-        val nameInput = remember {
-            mutableStateOf(
-                TextInputState(
-                    label = "Name",
-                    inputConfig = InputConfig.text {
-                        minLength = 3
-                        maxLength = 25
-                    }
-                )
-            )
-        }
-
-        val bioInput = remember {
-            mutableStateOf(
-                TextInputState(
-                    label = "Bio",
-                    inputConfig = InputConfig.text {
-                        minLength = 5
-                        maxLength = 50
-                    }
-                )
-            )
-        }
-
-        val gender = remember {
-            mutableStateOf<Gender?>(null)
-        }
-
-        var genderError by remember {
-            mutableStateOf(false)
-        }
-
-        var dob by remember {
-            mutableStateOf<String?>(null)
-        }
-
-        LaunchedEffect(key1 = gender.value) {
-            if (gender.value != null) genderError = false
-        }
-
-
-        val image = remember {
-            mutableStateOf<PickedMedia?>(null)
-        }
-
         Column(
             Modifier
                 .fillMaxSize()
@@ -148,10 +171,15 @@ fun EditProfileScreen(
         ) {
 
             val initImagePicker = {
-                mediaPickerDialogState.value = MediaPickerDialogState.Visible(
+                mediaPickerDialogState.value = MediaPickerDialogState.ShowMediaPicker(
                     type = MediaType.Image,
                     allowMultiple = false,
-                    fromGalleryType = FromGalleryType.VisualMediaPicker
+                    fromGalleryType = FromGalleryType.VisualMediaPicker,
+                    cropParams = MediaPickerCropParams.Enabled(
+                        showAspectRatioSelectionButton = false,
+                        showShapeCropButton = false,
+                        lockAspectRatio = AspectRatio(1, 1)
+                    )
                 ) { getList ->
                     scope.launch {
                         val list = getList()
@@ -161,6 +189,7 @@ fun EditProfileScreen(
                     }
                 }
             }
+
             image.value?.let {
                 ProfileImage(
                     pickedMedia = it,
@@ -194,7 +223,8 @@ fun EditProfileScreen(
                         title = "Gender",
                         state = gender,
                         options = Gender.entries.toList(),
-                        labelExtractor = { it.name }
+                        labelExtractor = { it.name },
+                        enabled = !updateProfile
                     )
 
                     if (genderError) Text(text = "Required!")
@@ -209,7 +239,8 @@ fun EditProfileScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        showDatePicker(
+                        if (updateProfile) return@clickable
+                        else showDatePicker(
                             DatePickerDialog.Params(
                                 format = DateTimeUtils.Format.DATE_MONTH_YEAR_2,
                                 prefill = dob,
@@ -227,14 +258,13 @@ fun EditProfileScreen(
                 modifier = Modifier
                     .padding(top = 24.dp)
                     .align(Alignment.CenterHorizontally),
-                state = viewModel.saveProfileTask,
-                label = "SAVE",
+                state = if (!updateProfile) viewModel.saveProfileTask else viewModel.updateProfileTask,
+                label = if (!updateProfile) "SAVE" else "UPDATE",
                 onClick = {
                     if (TextInputState.allHaveValidInputs(
                             nameInput, bioInput
-                        ) && gender.value != null
+                        ) && gender.value != null && !updateProfile
                     ) {
-
                         gender.value?.let {
                             val user = User(
                                 name = nameInput.value(),
@@ -248,9 +278,19 @@ fun EditProfileScreen(
                                 scope.launch {
                                     snackBarHostState.showSnackbar("Registration successful")
                                 }
-                                navController.navigateTo(Screen.Home.route, Screen.EditProfile.format())
+                                navController.navigateTo(
+                                    Screen.Home.route,
+                                    Screen.EditProfile.format()
+                                )
                             }
                         }
+
+                    } else if (updateProfile && gender.value != null) {
+                        val user = currUser?.copy(
+                            name = nameInput.value(),
+                            bio = bioInput.value()
+                        ) ?: return@TaskLoadingButton
+                        viewModel.updateUser(user, image.value)
 
                     }
                     if (gender.value == null) genderError = true

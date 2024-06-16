@@ -7,9 +7,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.chatapp.domain.ext.id
 import com.example.chatapp.feature.home.comp.ChannelCard
+import com.example.chatapp.helper.navigateTo
 import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.theme.Primary
 import com.streamliners.base.taskState.comp.whenLoaded
@@ -43,8 +46,19 @@ fun HomeScreen(
                 title = { Text(text = "Welcome to ChatApp") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Primary,
-                    titleContentColor = Color.White
-                )
+                    titleContentColor = Color.White,
+                    actionIconContentColor = Color.White
+                ),
+                actions = {
+
+                    IconButton(onClick = {
+                        navController.currentBackStackEntry?.savedStateHandle?.set("showDetails", true)
+//                        navController.navigateTo(Screen.EditProfile("snehp1801@gmal.com").route)
+                        navController.navigateTo(Screen.EditProfile("snehp1801@gmail.com"), Screen.Login)
+                    }) {
+                        Icon(imageVector = Icons.Filled.Person, contentDescription = "add")
+                    }
+                }
             )
         },
         floatingActionButton = {

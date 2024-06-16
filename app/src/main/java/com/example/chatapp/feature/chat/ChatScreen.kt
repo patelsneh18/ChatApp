@@ -27,6 +27,7 @@ import com.streamliners.compose.comp.textInput.state.TextInputState
 import com.streamliners.compose.comp.textInput.state.ifValidInput
 import com.streamliners.compose.comp.textInput.state.update
 import com.streamliners.pickers.media.FromGalleryType
+import com.streamliners.pickers.media.MediaPickerCropParams
 import com.streamliners.pickers.media.MediaPickerDialog
 import com.streamliners.pickers.media.MediaPickerDialogState
 import com.streamliners.pickers.media.MediaType
@@ -77,10 +78,11 @@ fun ChatScreen(
                 IconButton(
                     modifier = Modifier.padding(8.dp),
                     onClick = {
-                    mediaPickerDialogState.value = MediaPickerDialogState.Visible(
+                    mediaPickerDialogState.value = MediaPickerDialogState.ShowMediaPicker(
                         type = MediaType.Image,
                         allowMultiple = false,
-                        fromGalleryType = FromGalleryType.VisualMediaPicker
+                        fromGalleryType = FromGalleryType.VisualMediaPicker,
+                        cropParams = MediaPickerCropParams.Enabled()
                     ) { getList ->
                         scope.launch {
                             val list = getList()

@@ -1,5 +1,6 @@
 package com.example.chatapp.feature.editProfile
 
+import android.util.Log
 import androidx.core.net.toUri
 import com.example.chatapp.data.LocalRepo
 import com.example.chatapp.data.remote.StorageRepo
@@ -15,6 +16,7 @@ import com.streamliners.base.taskState.taskStateOf
 import com.streamliners.pickers.media.PickedMedia
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import kotlin.math.exp
 
 class EditProfileViewModel @Inject constructor(
     private val userRepo: UserRepo,
@@ -23,6 +25,8 @@ class EditProfileViewModel @Inject constructor(
 ): BaseViewModel() {
 
     val saveProfileTask = taskStateOf<Unit>()
+    val updateProfileTask = taskStateOf<Unit>()
+    val getUserTask = taskStateOf<User>()
     fun saveUser(user: User, image: PickedMedia?, onSuccess: () -> Unit){
         execute(showLoadingDialog = false){
             saveProfileTask.load {
@@ -41,11 +45,36 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 
+    fun updateUser(user: User, image: PickedMedia?) {
+        execute {
+            updateProfileTask.load {
+                if (image?.uri?.split(":")?.get(0)?.contains("content") == true) {
+                    val updatedUser = user.copy(
+                        profileImageUrl = uploadProfileImage(user.email, image)
+                    )
+                    userRepo.upsertUser(user)
+                    localRepo.upsertCurrentUser(updatedUser)
+                } else {
+                    userRepo.upsertUser(user)
+                    localRepo.upsertCurrentUser(user)
+                }
+            }
+        }
+    }
+
     private suspend fun uploadProfileImage(email: String, image: PickedMedia?): String? {
         return image?.let {
             // TODO Save Image using user id
             // TODO Use the exact file extension
             storageRepo.saveFile("profileImages/$email.jpg", it.uri.toUri())
+        }
+    }
+
+    suspend fun getUserDetails(email: String) {
+        execute {
+            getUserTask.load {
+                userRepo.getUserWithEmail(email) ?: error("No user found")
+            }
         }
     }
 }

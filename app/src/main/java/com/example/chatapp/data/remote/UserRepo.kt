@@ -1,6 +1,7 @@
 package com.example.chatapp.data.remote
 
 import com.example.chatapp.data.remote.FirestoreCollections.usersColl
+import com.example.chatapp.domain.ext.id
 import com.example.chatapp.domain.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,6 +18,13 @@ class UserRepo {
             .await()
     }
 
+    suspend fun upsertUser(user: User) {
+        Firebase.firestore
+            .usersColl()
+            .document(user.id())
+            .set(user)
+            .await()
+    }
     suspend fun getAllUsers(): List<User>{
         return Firebase.firestore
             .usersColl()
