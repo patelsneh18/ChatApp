@@ -7,6 +7,7 @@ import com.example.chatapp.domain.model.Message
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
+import com.streamliners.pickers.media.PickedMedia
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -58,10 +59,35 @@ class ChannelRepo {
         return id
     }
 
+    suspend fun createGroupChannel(
+        currentUserId: String,
+        name: String,
+        description: String?,
+        groupImage: String?,
+        members: List<String>
+    ): String {
+        val collRef = Firebase.firestore.channelsColl()
+        val id = collRef.document().id
+        collRef
+            .document(id)
+            .set(
+                Channel (
+                    imageUrl = groupImage,
+                    type = Channel.Type.Group,
+                    name = name,
+                    description = description,
+                    members = members + currentUserId,
+                    messages = emptyList()
+                )
+            )
+            .await()
+
+        return id
+    }
+
     suspend fun getAllChannelsOf(userId: String): List<Channel> {
         return Firebase.firestore
             .channelsColl()
-            .whereEqualTo(Channel::type.name, Channel.Type.OneToOne)
             .whereArrayContains(Channel::members.name, userId)
             .get()
             .await()

@@ -7,6 +7,7 @@ sealed class Screen(
     data object Login : Screen("Login")
     data object Home : Screen("Home")
     data object NewChat : Screen("NewChat")
+    data object NewGroupChat : Screen("NewGroupChat")
     class EditProfile(
         val email: String
     ) : Screen("EditProfile?email=$email") {

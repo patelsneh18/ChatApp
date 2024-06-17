@@ -1,12 +1,14 @@
 package com.example.chatapp.feature.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -62,10 +64,20 @@ fun HomeScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navController.navigate(Screen.NewChat.route) }
-            ) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = "add")
+            Column (
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ){
+                FloatingActionButton(
+                    onClick = { navController.navigate(Screen.NewGroupChat.route) }
+                ) {
+                    Icon(imageVector = Icons.Default.Group, contentDescription = "New group chat")
+                }
+
+                FloatingActionButton(
+                    onClick = { navController.navigate(Screen.NewChat.route) }
+                ) {
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = "New one to one chat")
+                }
             }
         }
     ) { paddingValues ->

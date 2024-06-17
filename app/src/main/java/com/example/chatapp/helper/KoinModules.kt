@@ -11,6 +11,7 @@ import com.example.chatapp.feature.editProfile.EditProfileViewModel
 import com.example.chatapp.feature.home.HomeViewModel
 import com.example.chatapp.feature.login.LoginViewModel
 import com.example.chatapp.feature.newChat.NewChatViewModel
+import com.example.chatapp.feature.newGroupChat.NewGroupChatViewModel
 import com.example.chatapp.feature.splash.SplashViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -35,6 +36,7 @@ val viewModelModule = module{
     viewModel { SplashViewModel(get()) }
     viewModel { LoginViewModel(get(), get()) }
     viewModel { NewChatViewModel(get(), get(), get()) }
+    viewModel { NewGroupChatViewModel(get(), get(), get(), get()) }
     viewModel { HomeViewModel(get(), get(), get()) }
     viewModel { ChatViewModel(get(), get(), get(), get()) }
 }

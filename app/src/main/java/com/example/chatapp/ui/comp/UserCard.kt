@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,15 +29,20 @@ import com.example.chatapp.ui.theme.Neutral50
 
 @Composable
 fun UserCard(
+    modifier: Modifier = Modifier,
     user: User,
+    checked: Boolean? = null,
+    onCheckedChanged: (Boolean)-> Unit = {},
     onClick: () -> Unit
 ) {
-    Card {
+    Card (
+        modifier = modifier,
+        onClick = onClick
+    ){
         Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .clickable { onClick() },
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
@@ -63,23 +69,26 @@ fun UserCard(
                     color = Neutral50
                 )
             }
+            checked?.let {
+                Checkbox(checked = it, onCheckedChange = onCheckedChanged)
+            }
         }
     }
 }
 
-@Preview
-@Composable
-fun UserPreview() {
-    UserCard(
-        user = User(
-            id = null,
-            name = "Sneh",
-            email = "patelsneh18@gmail.com",
-            profileImageUrl = null,
-            bio = "BIooooooooooo",
-            gender = Gender.Male,
-            dob = "18/01/2002"
-        ),
-        onClick = {}
-    )
-}
+//@Preview
+//@Composable
+//fun UserPreview() {
+//    UserCard(
+//        user = User(
+//            id = null,
+//            name = "Sneh",
+//            email = "patelsneh18@gmail.com",
+//            profileImageUrl = null,
+//            bio = "BIooooooooooo",
+//            gender = Gender.Male,
+//            dob = "18/01/2002"
+//        ),
+//        onClick = {}
+//    )
+//}

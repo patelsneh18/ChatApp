@@ -31,12 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.chatapp.domain.model.Gender
 import com.example.chatapp.domain.model.User
-import com.example.chatapp.feature.editProfile.comp.AddImageButton
 import com.example.chatapp.feature.editProfile.comp.ProfileImage
+import com.example.chatapp.helper.launchMediaPickerDialogForImage
 import com.example.chatapp.helper.navigateTo
 import com.example.chatapp.ui.Screen
+import com.example.chatapp.ui.comp.AddImageButton
 import com.example.chatapp.ui.theme.Primary
-import com.mr0xf00.easycrop.AspectRatio
 import com.streamliners.base.taskState.comp.TaskLoadingButton
 import com.streamliners.base.taskState.comp.whenLoaded
 import com.streamliners.compose.comp.select.RadioGroup
@@ -49,11 +49,7 @@ import com.streamliners.compose.comp.textInput.state.update
 import com.streamliners.compose.comp.textInput.state.value
 import com.streamliners.pickers.date.DatePickerDialog
 import com.streamliners.pickers.date.ShowDatePicker
-import com.streamliners.pickers.media.FromGalleryType
-import com.streamliners.pickers.media.MediaPickerCropParams
 import com.streamliners.pickers.media.MediaPickerDialog
-import com.streamliners.pickers.media.MediaPickerDialogState
-import com.streamliners.pickers.media.MediaType
 import com.streamliners.pickers.media.PickedMedia
 import com.streamliners.pickers.media.rememberMediaPickerDialogState
 import com.streamliners.utils.DateTimeUtils
@@ -169,35 +165,18 @@ fun EditProfileScreen(
                 .padding(paddingValues),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-
-            val initImagePicker = {
-                mediaPickerDialogState.value = MediaPickerDialogState.ShowMediaPicker(
-                    type = MediaType.Image,
-                    allowMultiple = false,
-                    fromGalleryType = FromGalleryType.VisualMediaPicker,
-                    cropParams = MediaPickerCropParams.Enabled(
-                        showAspectRatioSelectionButton = false,
-                        showShapeCropButton = false,
-                        lockAspectRatio = AspectRatio(1, 1)
-                    )
-                ) { getList ->
-                    scope.launch {
-                        val list = getList()
-                        list.firstOrNull()?.let {
-                            image.value = it
-                        }
-                    }
-                }
-            }
-
             image.value?.let {
                 ProfileImage(
                     pickedMedia = it,
-                    initImagePicker,
+                    onClick = {
+                        launchMediaPickerDialogForImage(mediaPickerDialogState, scope, image)
+                    },
                     Modifier.align(Alignment.CenterHorizontally)
                 )
             } ?: AddImageButton(
-                initImagePicker,
+                onClick = {
+                    launchMediaPickerDialogForImage(mediaPickerDialogState, scope, image)
+                },
                 Modifier.align(Alignment.CenterHorizontally)
             )
 
