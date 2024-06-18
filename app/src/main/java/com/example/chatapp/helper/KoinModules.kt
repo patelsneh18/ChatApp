@@ -38,5 +38,5 @@ val viewModelModule = module{
     viewModel { NewChatViewModel(get(), get(), get()) }
     viewModel { NewGroupChatViewModel(get(), get(), get(), get()) }
     viewModel { HomeViewModel(get(), get(), get()) }
-    viewModel { ChatViewModel(get(), get(), get(), get()) }
+    viewModel { ChatViewModel(get(), get(), get(), get(), get()) }
 }
