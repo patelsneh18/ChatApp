@@ -15,13 +15,13 @@ import com.streamliners.pickers.media.PickedMedia
 
 @Composable
 fun ProfileImage(
-    pickedMedia: PickedMedia,
+    data: String,
     onClick : () -> Unit,
     modifier: Modifier
     ) {
 
     AsyncImage(
-        uri = pickedMedia.uri,
+        uri = data,
         modifier = modifier.clip(CircleShape)
             .size(100.dp)
             .clickable { onClick() },

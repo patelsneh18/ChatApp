@@ -36,9 +36,9 @@ import com.example.chatapp.helper.launchMediaPickerDialogForImage
 import com.example.chatapp.helper.navigateTo
 import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.comp.AddImageButton
+import com.example.chatapp.ui.comp.ImageState
 import com.example.chatapp.ui.theme.Primary
 import com.streamliners.base.taskState.comp.TaskLoadingButton
-import com.streamliners.base.taskState.comp.whenLoaded
 import com.streamliners.compose.comp.select.RadioGroup
 import com.streamliners.compose.comp.textInput.TextInputLayout
 import com.streamliners.compose.comp.textInput.config.InputConfig
@@ -50,7 +50,6 @@ import com.streamliners.compose.comp.textInput.state.value
 import com.streamliners.pickers.date.DatePickerDialog
 import com.streamliners.pickers.date.ShowDatePicker
 import com.streamliners.pickers.media.MediaPickerDialog
-import com.streamliners.pickers.media.PickedMedia
 import com.streamliners.pickers.media.rememberMediaPickerDialogState
 import com.streamliners.utils.DateTimeUtils
 import kotlinx.coroutines.launch
@@ -105,31 +104,25 @@ fun EditProfileScreen(
     }
 
 
-    val image = remember {
-        mutableStateOf<PickedMedia?>(null)
+    val imageState = remember {
+        mutableStateOf<ImageState>(ImageState.Empty)
     }
 
-    var updateProfile by remember {
-        mutableStateOf(false)
-    }
 
+    //Prefill Values based on current user
     LaunchedEffect(key1 = Unit) {
-        val lastRoute = navController.previousBackStackEntry?.destination?.route
-            ?: error("no backstack entry found")
-        if (lastRoute.contains("Home")) {
-            updateProfile = true
-            viewModel.getUserDetails(email)
-        }
-    }
+        viewModel.getUserDetails { user ->
+            user.run {
+                nameInput.update(name)
+                bioInput.update(bio)
+            }
+            gender.value = user.gender
+            dob = user.dob
 
-    viewModel.getUserTask.whenLoaded { user ->
-        currUser = user
-        nameInput.update(user.name)
-        bioInput.update(user.bio)
-        gender.value = user.gender
-        dob = user.dob
-        if (user.profileImageUrl != null) image.value =
-            PickedMedia.Image(user.profileImageUrl, null)
+            user.profileImageUrl?.let { imageUrl ->
+                imageState.value = ImageState.Exists(imageUrl)
+            }
+        }
     }
 
     val snackBarHostState = remember {
@@ -165,23 +158,23 @@ fun EditProfileScreen(
                 .padding(paddingValues),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            image.value?.let {
+            imageState.value.data()?.let {
                 ProfileImage(
-                    pickedMedia = it,
+                    data = it,
                     onClick = {
-                        launchMediaPickerDialogForImage(mediaPickerDialogState, scope, image)
+                        launchMediaPickerDialogForImage(mediaPickerDialogState, scope, imageState)
                     },
                     Modifier.align(Alignment.CenterHorizontally)
                 )
             } ?: AddImageButton(
                 onClick = {
-                    launchMediaPickerDialogForImage(mediaPickerDialogState, scope, image)
+                    launchMediaPickerDialogForImage(mediaPickerDialogState, scope, imageState)
                 },
                 Modifier.align(Alignment.CenterHorizontally)
             )
 
             TextInputLayout(state = nameInput)
-
+    
             OutlinedTextField(
                 value = email,
                 onValueChange = {},
@@ -202,24 +195,20 @@ fun EditProfileScreen(
                         title = "Gender",
                         state = gender,
                         options = Gender.entries.toList(),
-                        labelExtractor = { it.name },
-                        enabled = !updateProfile
+                        labelExtractor = { it.name }
                     )
 
                     if (genderError) Text(text = "Required!")
                 }
             }
 
-            // TODO DOB MIN MAX
-            // TODO Make DOB Compulsory
             OutlinedTextField(
                 value = dob ?: "",
                 onValueChange = {},
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        if (updateProfile) return@clickable
-                        else showDatePicker(
+                        showDatePicker(
                             DatePickerDialog.Params(
                                 format = DateTimeUtils.Format.DATE_MONTH_YEAR_2,
                                 prefill = dob,
@@ -237,12 +226,12 @@ fun EditProfileScreen(
                 modifier = Modifier
                     .padding(top = 24.dp)
                     .align(Alignment.CenterHorizontally),
-                state = if (!updateProfile) viewModel.saveProfileTask else viewModel.updateProfileTask,
-                label = if (!updateProfile) "SAVE" else "UPDATE",
+                state = viewModel.saveProfileTask,
+                label = "SAVE",
                 onClick = {
                     if (TextInputState.allHaveValidInputs(
                             nameInput, bioInput
-                        ) && gender.value != null && !updateProfile
+                        ) && gender.value != null
                     ) {
                         gender.value?.let {
                             val user = User(
@@ -253,9 +242,9 @@ fun EditProfileScreen(
                                 gender = it,
                                 dob = dob
                             )
-                            viewModel.saveUser(user, image.value) {
+                            viewModel.saveUser(user, imageState.value) {
                                 scope.launch {
-                                    snackBarHostState.showSnackbar("Registration successful")
+                                    snackBarHostState.showSnackbar("Saved")
                                 }
                                 navController.navigateTo(
                                     Screen.Home.route,
@@ -263,13 +252,6 @@ fun EditProfileScreen(
                                 )
                             }
                         }
-
-                    } else if (updateProfile && gender.value != null) {
-                        val user = currUser?.copy(
-                            name = nameInput.value(),
-                            bio = bioInput.value()
-                        ) ?: return@TaskLoadingButton
-                        viewModel.updateUser(user, image.value)
 
                     }
                     if (gender.value == null) genderError = true

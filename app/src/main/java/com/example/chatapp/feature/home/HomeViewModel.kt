@@ -6,11 +6,16 @@ import com.example.chatapp.data.remote.UserRepo
 import com.example.chatapp.domain.ext.id
 import com.example.chatapp.domain.ext.profileImageUrl
 import com.example.chatapp.domain.model.Channel
+import com.google.firebase.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.messaging
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
 import com.streamliners.base.taskState.load
 import com.streamliners.base.taskState.taskStateOf
 import com.streamliners.base.taskState.update
+import com.streamliners.base.taskState.value
+import kotlinx.coroutines.tasks.await
 
 class HomeViewModel(
     private val channelRepo: ChannelRepo,
@@ -43,6 +48,19 @@ class HomeViewModel(
                     }
                 }
             channelsState.update(channels)
+
+            subscribeForGroupNotifications()
+        }
+    }
+
+    private fun subscribeForGroupNotifications() {
+        execute(false) {
+            channelsState.value()
+                .filter { it.type == Channel.Type.Group }
+                .forEach { channel ->
+                    Firebase.messaging.subscribeToTopic(channel.id())
+                        .await()
+                }
         }
     }
 }

@@ -4,18 +4,21 @@ import com.example.chatapp.domain.model.User
 import com.example.chatapp.helper.DataStoreUtil
 
 class LocalRepo (
-    val dataStoreUtil: DataStoreUtil
+    private val dataStoreUtil: DataStoreUtil
 ){
+    companion object {
+        private const val KEY_USER = "user"
+    }
     suspend fun upsertCurrentUser(user: User){
-        dataStoreUtil.setData("user", user)
+        dataStoreUtil.setData(KEY_USER, user)
     }
 
     suspend fun getLoggedInUser(): User {
         return getLoggedInUserNullable() ?: error("User not found in local")
     }
 
-    private suspend fun getLoggedInUserNullable(): User? {
-        return dataStoreUtil.getData<User>("user")
+    suspend fun getLoggedInUserNullable(): User? {
+        return dataStoreUtil.getData<User>(KEY_USER)
     }
 
     suspend fun isLoggedIn() = getLoggedInUserNullable() != null

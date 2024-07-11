@@ -18,13 +18,13 @@ class UserRepo {
             .await()
     }
 
-    suspend fun upsertUser(user: User) {
-        Firebase.firestore
-            .usersColl()
-            .document(user.id())
-            .set(user)
-            .await()
+    suspend fun upsertUser(user: User): User{
+        val collRef = Firebase.firestore.usersColl()
+        val id = user.id ?: collRef.document().id
+        collRef.document(id).set(user).await()
+        return user.copy(id = id)
     }
+
     suspend fun getAllUsers(): List<User>{
         return Firebase.firestore
             .usersColl()

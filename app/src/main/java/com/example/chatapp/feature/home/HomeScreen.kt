@@ -29,6 +29,8 @@ import com.example.chatapp.feature.home.comp.ChannelCard
 import com.example.chatapp.helper.navigateTo
 import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.theme.Primary
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.streamliners.base.taskState.comp.whenLoaded
 import com.streamliners.compose.comp.CenterText
 import com.streamliners.helpers.NotificationHelper
@@ -52,13 +54,20 @@ fun HomeScreen(
                     actionIconContentColor = Color.White
                 ),
                 actions = {
-
                     IconButton(onClick = {
                         navController.currentBackStackEntry?.savedStateHandle?.set("showDetails", true)
 //                        navController.navigateTo(Screen.EditProfile("snehp1801@gmal.com").route)
-                        navController.navigateTo(Screen.EditProfile("snehp1801@gmail.com"), Screen.Login)
+                        navController.navigate(
+                            Screen.EditProfile(
+                                Firebase.auth.currentUser?.email ?: error("No email found")
+                            ).route
+                        )
                     }) {
-                        Icon(imageVector = Icons.Filled.Person, contentDescription = "add")
+                        Icon(
+                            imageVector = Icons.Filled.Person,
+                            contentDescription = "EditProfile",
+                            tint = Color.White
+                        )
                     }
                 }
             )

@@ -39,7 +39,7 @@ fun GroupInfoInput(
     ) {
         image.value?.let {
             ProfileImage(
-                pickedMedia = it,
+                data = it.uri,
                 onClick = {
                     launchMediaPickerDialogForImage(mediaPickerDialogState, scope, image)
                 },
