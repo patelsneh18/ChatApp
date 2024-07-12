@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import com.example.chatapp.data.temp.Scripts
 import com.example.chatapp.ui.ChatAppNavHost
 import com.example.chatapp.ui.theme.ChatAppTheme
-import com.google.firebase.BuildConfig
 import com.streamliners.base.BaseActivity
 import com.streamliners.base.uiEvent.UiEventDialogs
 

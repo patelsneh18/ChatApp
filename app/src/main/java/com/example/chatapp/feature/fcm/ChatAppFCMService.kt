@@ -1,17 +1,18 @@
 package com.example.chatapp.feature.fcm
 
+import android.util.Log
 import com.example.chatapp.BuildConfig
 import com.example.chatapp.MainActivity
 import com.example.chatapp.data.LocalRepo
 import com.example.chatapp.data.remote.UserRepo
 import com.example.chatapp.domain.ext.id
+import com.example.chatapp.domain.model.fcm.NewMessageNotification
+import com.example.chatapp.helper.Base64Util
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.streamliners.base.exception.defaultExceptionHandler
 import com.streamliners.base.exception.defaultExecuteHandlingError
 import com.streamliners.helpers.NotificationHelper
 import org.koin.android.ext.android.inject
-import javax.inject.Inject
 
 class ChatAppFCMService: FirebaseMessagingService() {
 
@@ -21,10 +22,25 @@ class ChatAppFCMService: FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        val notificationParams = message.notification ?: return
-        val title = notificationParams.title ?: return
-        val body = notificationParams.body ?: return
-        showNotification(title, body)
+        val data = message.data
+
+        defaultExecuteHandlingError(
+            lambda = {
+                val objectStr = data["object"] ?: error("Notification Object not found")
+                val newMessageNotification = Base64Util.decodeJson<NewMessageNotification>(objectStr)
+
+                val localUserId = localRepo.getLoggedInUser().id()
+
+                if (newMessageNotification.senderUserId == localUserId) {
+                    Log.i("ChatAppDebug", "Skipping notification as it is self sent")
+                    return@defaultExecuteHandlingError
+                }
+
+                newMessageNotification.run {
+                    showNotification(title, body)
+                }
+            }, buildType = BuildConfig.BUILD_TYPE
+        )
     }
 
     private fun showNotification(title: String, body: String) {

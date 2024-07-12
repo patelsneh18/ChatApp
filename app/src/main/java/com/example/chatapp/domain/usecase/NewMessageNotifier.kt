@@ -2,6 +2,8 @@ package com.example.chatapp.domain.usecase
 
 import com.example.chatapp.data.remote.OtherRepo
 import com.example.chatapp.data.remote.UserRepo
+import com.example.chatapp.domain.model.fcm.NewMessageNotification
+import com.example.chatapp.helper.Base64Util
 import com.example.chatapp.helper.FcmMessage
 import com.example.chatapp.helper.FcmPayload
 import com.example.chatapp.helper.FcmSender
@@ -18,12 +20,15 @@ class NewMessageNotifier (
         message: String
     ) {
         val token = userRepo.getUserWithId(userId).fcmToken
+        val newMessageNotification = NewMessageNotification(
+            title = "New Message",
+            body = "$senderName : $message"
+        )
         val payload = FcmPayload (
             FcmMessage.forToken(
                 token = token,
-                notification = NotificationPayload(
-                    title = "New Message",
-                    body = "$senderName: $message"
+                data = mapOf(
+                    "object" to Base64Util.encodeAsJson(newMessageNotification)
                 )
             )
         )
@@ -35,12 +40,15 @@ class NewMessageNotifier (
         topic: String,
         message: String
     ) {
+        val newMessageNotification = NewMessageNotification(
+            title = "New Message",
+            body = "$senderName : $message"
+        )
         val payload = FcmPayload (
             FcmMessage.forTopic(
                 topic = topic,
-                notification = NotificationPayload(
-                    title = "New Message",
-                    body = "$senderName: $message"
+                data = mapOf(
+                    "object" to Base64Util.encodeAsJson(newMessageNotification)
                 )
             )
         )
