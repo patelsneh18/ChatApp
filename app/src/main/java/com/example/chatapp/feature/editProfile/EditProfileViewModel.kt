@@ -25,7 +25,7 @@ class EditProfileViewModel @Inject constructor(
 
     val saveProfileTask = taskStateOf<Unit>()
     val updateProfileTask = taskStateOf<Unit>()
-    val currentUser: User? = null
+    var currentUser: User? = null
 
     fun saveUser(
         user: User,
@@ -68,6 +68,7 @@ class EditProfileViewModel @Inject constructor(
     ) {
         execute {
             localRepo.getLoggedInUserNullable()?.let { user ->
+                currentUser = user
                 onSuccess(user)
             }
         }
