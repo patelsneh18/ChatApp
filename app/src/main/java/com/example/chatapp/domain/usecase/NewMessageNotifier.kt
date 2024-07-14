@@ -2,8 +2,7 @@ package com.example.chatapp.domain.usecase
 
 import com.example.chatapp.data.remote.OtherRepo
 import com.example.chatapp.data.remote.UserRepo
-import com.example.chatapp.domain.model.fcm.NewMessageNotification
-import com.example.chatapp.feature.fcm.NotificationType
+import com.example.chatapp.feature.fcm.Notification
 import com.example.chatapp.helper.Base64Util
 import com.example.chatapp.helper.FcmMessage
 import com.example.chatapp.helper.FcmPayload
@@ -20,7 +19,7 @@ class NewMessageNotifier (
         message: String
     ) {
         val token = userRepo.getUserWithId(userId).fcmToken
-        val newMessageNotification = NewMessageNotification(
+        val newMessageNotification = Notification.NewMessageNotification(
             title = "New Message",
             body = "$senderName : $message"
         )
@@ -28,8 +27,7 @@ class NewMessageNotifier (
             FcmMessage.forToken(
                 token = token,
                 data = mapOf(
-                    "type" to NotificationType.NewMessage,
-                    "object" to Base64Util.encodeAsJson(newMessageNotification)
+                    "object" to Base64Util.encodeAsJson(newMessageNotification, Notification.supportingGson())
                 )
             )
         )
@@ -41,7 +39,7 @@ class NewMessageNotifier (
         topic: String,
         message: String
     ) {
-        val newMessageNotification = NewMessageNotification(
+        val newMessageNotification = Notification.NewMessageNotification(
             title = "New Message",
             body = "$senderName : $message"
         )
@@ -49,7 +47,7 @@ class NewMessageNotifier (
             FcmMessage.forTopic(
                 topic = topic,
                 data = mapOf(
-                    "object" to Base64Util.encodeAsJson(newMessageNotification)
+                    "object" to Base64Util.encodeAsJson(newMessageNotification, Notification.supportingGson())
                 )
             )
         )
