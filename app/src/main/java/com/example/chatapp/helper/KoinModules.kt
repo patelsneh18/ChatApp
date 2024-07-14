@@ -5,6 +5,7 @@ import com.example.chatapp.data.remote.ChannelRepo
 import com.example.chatapp.data.remote.OtherRepo
 import com.example.chatapp.data.remote.StorageRepo
 import com.example.chatapp.data.remote.UserRepo
+import com.example.chatapp.domain.usecase.LastOnlineTSUpdater
 import com.example.chatapp.domain.usecase.NewMessageNotifier
 import com.example.chatapp.feature.chat.ChatViewModel
 import com.example.chatapp.feature.editProfile.EditProfileViewModel
@@ -29,6 +30,7 @@ val appModule = module {
     single { HttpClient(CIO) { expectSuccess = true } }
     single { FcmSender(get()) }
     single { NewMessageNotifier(get(), get(), get()) }
+    single { LastOnlineTSUpdater(get(), get()) }
 }
 
 val viewModelModule = module{

@@ -4,6 +4,7 @@ import com.example.chatapp.data.remote.FirestoreCollections.usersColl
 import com.example.chatapp.domain.model.Gender
 import com.example.chatapp.domain.model.User
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 
@@ -16,7 +17,8 @@ object Scripts {
                 profileImageUrl = null,
                 bio = "Hello, I'm Alice!",
                 gender = Gender.Female,
-                dob = "1990-05-15"
+                dob = "1990-05-15",
+                lastOnlineTS = Timestamp.now()
             ),
             User(
                 name = "Bob",
@@ -24,7 +26,8 @@ object Scripts {
                 profileImageUrl = null,
                 bio = "Hey there, I'm Bob!",
                 gender = Gender.Male,
-                dob = "1985-10-20"
+                dob = "1985-10-20",
+                lastOnlineTS = Timestamp.now()
             ),
             User(
                 name = "Charlie",
@@ -32,7 +35,8 @@ object Scripts {
                 profileImageUrl = null,
                 bio = "Hi, I'm Charlie!",
                 gender = Gender.Male,
-                dob = "1992-07-18"
+                dob = "1992-07-18",
+                lastOnlineTS = Timestamp.now()
             ),
             User(
                 name = "Diana",
@@ -40,7 +44,8 @@ object Scripts {
                 profileImageUrl = null,
                 bio = "Nice to meet you, I'm Diana!",
                 gender = Gender.Female,
-                dob = "1988-12-03"
+                dob = "1988-12-03",
+                lastOnlineTS = Timestamp.now()
             ),
             User(
                 name = "Ethan",
@@ -48,7 +53,8 @@ object Scripts {
                 profileImageUrl = null,
                 bio = "Greetings, I'm Ethan!",
                 gender = Gender.Male,
-                dob = "1993-09-28"
+                dob = "1993-09-28",
+                lastOnlineTS = Timestamp.now()
             ),
             User(
                 name = "Fiona",
@@ -56,7 +62,8 @@ object Scripts {
                 profileImageUrl = null,
                 bio = "Hi there, I'm Fiona!",
                 gender = Gender.Female,
-                dob = "1995-04-21"
+                dob = "1995-04-21",
+                lastOnlineTS = Timestamp.now()
             ),
             User(
                 name = "George",
@@ -64,7 +71,8 @@ object Scripts {
                 profileImageUrl = null,
                 bio = "Hello, I'm George!",
                 gender = Gender.Male,
-                dob = "1987-06-12"
+                dob = "1987-06-12",
+                lastOnlineTS = Timestamp.now()
             ),
             User(
                 name = "Hannah",
@@ -72,7 +80,8 @@ object Scripts {
                 profileImageUrl = null,
                 bio = "Nice to meet you, I'm Hannah!",
                 gender = Gender.Female,
-                dob = "1991-11-05"
+                dob = "1991-11-05",
+                lastOnlineTS = Timestamp.now()
             ),
             User(
                 name = "Ian",
@@ -80,7 +89,8 @@ object Scripts {
                 profileImageUrl = null,
                 bio = "Hey there, I'm Ian!",
                 gender = Gender.Male,
-                dob = "1986-02-14"
+                dob = "1986-02-14",
+                lastOnlineTS = Timestamp.now()
             ),
             User(
                 name = "Jasmine",
@@ -88,7 +98,8 @@ object Scripts {
                 profileImageUrl = null,
                 bio = "Hello, I'm Jasmine!",
                 gender = Gender.Female,
-                dob = "1994-08-09"
+                dob = "1994-08-09",
+                lastOnlineTS = Timestamp.now()
             )
         )
 

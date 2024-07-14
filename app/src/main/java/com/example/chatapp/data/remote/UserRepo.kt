@@ -4,6 +4,7 @@ import com.example.chatapp.data.remote.FirestoreCollections.usersColl
 import com.example.chatapp.domain.ext.id
 import com.example.chatapp.domain.model.User
 import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObjects
@@ -58,6 +59,14 @@ class UserRepo {
             .usersColl()
             .document(userId)
             .update(User::fcmToken.name, token)
+            .await()
+    }
+
+    suspend fun updateOnlineTimestamp(userId: String) {
+        Firebase.firestore
+            .usersColl()
+            .document(userId)
+            .update(User::lastOnlineTS.name, Timestamp.now())
             .await()
     }
 }

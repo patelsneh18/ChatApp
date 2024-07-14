@@ -38,6 +38,7 @@ import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.comp.AddImageButton
 import com.example.chatapp.ui.comp.ImageState
 import com.example.chatapp.ui.theme.Primary
+import com.google.firebase.Timestamp
 import com.streamliners.base.taskState.comp.TaskLoadingButton
 import com.streamliners.compose.comp.select.RadioGroup
 import com.streamliners.compose.comp.textInput.TextInputLayout
@@ -240,7 +241,8 @@ fun EditProfileScreen(
                                 profileImageUrl = null,
                                 bio = bioInput.value(),
                                 gender = it,
-                                dob = dob
+                                dob = dob,
+                                lastOnlineTS = Timestamp.now()
                             )
                             viewModel.saveUser(user, imageState.value) {
                                 scope.launch {

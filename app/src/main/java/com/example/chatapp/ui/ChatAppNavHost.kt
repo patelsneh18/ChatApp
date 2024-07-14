@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.chatapp.MainActivity
+import com.example.chatapp.ui.main.MainActivity
 import com.example.chatapp.feature.chat.ChatScreen
 import com.example.chatapp.feature.editProfile.EditProfileScreen
 import com.example.chatapp.feature.home.HomeScreen
