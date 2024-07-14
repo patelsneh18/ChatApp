@@ -26,21 +26,32 @@ class ChatAppFCMService: FirebaseMessagingService() {
 
         defaultExecuteHandlingError(
             lambda = {
+                val type = data["type"]
+                    ?.run { NotificationType.valueOf(this) }
+                    ?: error("Notification Type nt received")
+
                 val objectStr = data["object"] ?: error("Notification Object not found")
-                val newMessageNotification = Base64Util.decodeJson<NewMessageNotification>(objectStr)
 
-                val localUserId = localRepo.getLoggedInUser().id()
-
-                if (newMessageNotification.senderUserId == localUserId) {
-                    Log.i("ChatAppDebug", "Skipping notification as it is self sent")
-                    return@defaultExecuteHandlingError
-                }
-
-                newMessageNotification.run {
-                    showNotification(title, body)
+                when (type) {
+                    NotificationType.NewMessage -> handleNewMessageNotification(objectStr)
                 }
             }, buildType = BuildConfig.BUILD_TYPE
         )
+    }
+
+    private suspend fun handleNewMessageNotification(objectStr: String) {
+        val newMessageNotification = Base64Util.decodeJson<NewMessageNotification>(objectStr)
+
+        val localUserId = localRepo.getLoggedInUser().id()
+
+        if (newMessageNotification.senderUserId == localUserId) {
+            Log.i("ChatAppDebug", "Skipping notification as it is self sent")
+            return
+        }
+
+        newMessageNotification.run {
+            showNotification(title, body)
+        }
     }
 
     private fun showNotification(title: String, body: String) {

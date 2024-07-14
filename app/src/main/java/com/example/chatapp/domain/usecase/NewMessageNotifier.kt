@@ -3,11 +3,11 @@ package com.example.chatapp.domain.usecase
 import com.example.chatapp.data.remote.OtherRepo
 import com.example.chatapp.data.remote.UserRepo
 import com.example.chatapp.domain.model.fcm.NewMessageNotification
+import com.example.chatapp.feature.fcm.NotificationType
 import com.example.chatapp.helper.Base64Util
 import com.example.chatapp.helper.FcmMessage
 import com.example.chatapp.helper.FcmPayload
 import com.example.chatapp.helper.FcmSender
-import com.example.chatapp.helper.NotificationPayload
 
 class NewMessageNotifier (
     private val userRepo: UserRepo,
@@ -28,6 +28,7 @@ class NewMessageNotifier (
             FcmMessage.forToken(
                 token = token,
                 data = mapOf(
+                    "type" to NotificationType.NewMessage,
                     "object" to Base64Util.encodeAsJson(newMessageNotification)
                 )
             )
