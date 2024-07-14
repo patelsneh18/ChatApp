@@ -2,7 +2,7 @@ package com.example.chatapp.feature.fcm
 
 import android.util.Log
 import com.example.chatapp.BuildConfig
-import com.example.chatapp.MainActivity
+import com.example.chatapp.ui.main.MainActivity
 import com.example.chatapp.data.LocalRepo
 import com.example.chatapp.data.remote.UserRepo
 import com.example.chatapp.domain.ext.id
@@ -26,7 +26,8 @@ class ChatAppFCMService: FirebaseMessagingService() {
         defaultExecuteHandlingError(
             lambda = {
                 val objectStr = data["object"] ?: error("Notification Object not found")
-                when (val notification = Base64Util.decodeJson<Notification>(objectStr)) {
+                val notification = Base64Util.decodeJson<Notification>(objectStr, Notification.supportingGson())
+                when (notification) {
                     is Notification.NewMessageNotification -> handleNewMessageNotification(notification)
                 }
             }, buildType = BuildConfig.BUILD_TYPE
@@ -36,11 +37,11 @@ class ChatAppFCMService: FirebaseMessagingService() {
     private suspend fun handleNewMessageNotification(notification: Notification.NewMessageNotification) {
         val localUserId = localRepo.getLoggedInUser().id()
 
-        if (notification.senderUserId == localUserId) {
-            Log.i("ChatAppDebug", "Skipping notification as it is self sent")
-            return
-        }
-
+//        if (notification.senderUserId == localUserId) {
+//            Log.i("ChatAppDebug", "Skipping notification as it is self sent")
+//            return
+//        }
+        Log.i("ChatAppDebug", "Notification sent $notification")
         notification.run {
             showNotification(title, body)
         }

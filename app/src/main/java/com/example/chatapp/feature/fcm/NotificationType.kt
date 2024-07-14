@@ -1,6 +1,7 @@
 package com.example.chatapp.feature.fcm
 
 import com.example.chatapp.helper.SealedTypeAdapterFactory
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
 sealed class Notification {
@@ -12,7 +13,7 @@ sealed class Notification {
     ): Notification()
 
     companion object {
-        fun supportingGson() = GsonBuilder()
+        fun supportingGson(): Gson = GsonBuilder()
             .registerTypeAdapterFactory(SealedTypeAdapterFactory.of(Notification::class))
             .create()
     }
