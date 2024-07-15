@@ -1,5 +1,6 @@
 package com.example.chatapp.feature.home.comp
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,11 +21,13 @@ import androidx.compose.ui.unit.dp
 import com.example.chatapp.R
 import com.example.chatapp.domain.model.Channel
 import com.example.chatapp.ui.general.AsyncImage
+import com.example.chatapp.ui.theme.Green
 import com.example.chatapp.ui.theme.Neutral50
 
 @Composable
 fun ChannelCard(
     channel: Channel,
+    isOnline: Boolean,
     onClick: () -> Unit
 ) {
     Card (
@@ -38,10 +41,16 @@ fun ChannelCard(
             verticalAlignment = Alignment.CenterVertically
         ){
             AsyncImage(
+                //Todo: Try showing green dot on profile for online status
                 uri = channel.imageUrl ?: "",
                 modifier = Modifier
                     .size(42.dp)
-                    .clip(CircleShape),
+                    .clip(CircleShape)
+                    .run {
+                        if (isOnline) {
+                            border(4.dp, Green, CircleShape)
+                        } else this
+                    },
                 placeholder = painterResource(id = R.drawable.ic_person)
             )
 

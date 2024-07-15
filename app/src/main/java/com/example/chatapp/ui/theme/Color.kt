@@ -19,3 +19,5 @@ val PrimaryLight = Color(0xFFB679C6)
 val Gradient = Brush.linearGradient(
     listOf(Secondary, Primary)
 )
+
+val Green = Color(0xFF00FF00)

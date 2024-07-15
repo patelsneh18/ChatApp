@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.chatapp.domain.ext.id
 import com.example.chatapp.feature.home.comp.ChannelCard
-import com.example.chatapp.helper.navigateTo
 import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.theme.Primary
 import com.google.firebase.Firebase
@@ -56,7 +55,6 @@ fun HomeScreen(
                 actions = {
                     IconButton(onClick = {
                         navController.currentBackStackEntry?.savedStateHandle?.set("showDetails", true)
-//                        navController.navigateTo(Screen.EditProfile("snehp1801@gmal.com").route)
                         navController.navigate(
                             Screen.EditProfile(
                                 Firebase.auth.currentUser?.email ?: error("No email found")
@@ -91,19 +89,22 @@ fun HomeScreen(
         }
     ) { paddingValues ->
 
-        viewModel.channelsState.whenLoaded { channels ->
+        viewModel.state.whenLoaded { data ->
             LazyColumn(
                 modifier = Modifier.padding(paddingValues),
                 contentPadding = PaddingValues(12.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                if (channels.isEmpty() ) {
+                if (data.channels.isEmpty() ) {
                     item { 
                         CenterText(text = "No Chats Found")
                     }
                 } else {
-                    items(channels) { channel ->
-                        ChannelCard(channel = channel) {
+                    items(data.channels) { channel ->
+                            ChannelCard(
+                                channel = channel,
+                                isOnline = viewModel.isChannelOneToOneAndOnline(channel)
+                            ) {
                             navController.navigate(Screen.Chat(channel.id()).route)
                         }
                     }
