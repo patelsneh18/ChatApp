@@ -1,6 +1,7 @@
 package com.example.chatapp.feature.home
 
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import com.example.chatapp.data.LocalRepo
 import com.example.chatapp.data.remote.ChannelRepo
 import com.example.chatapp.data.remote.UserRepo
@@ -10,6 +11,8 @@ import com.example.chatapp.domain.ext.otherUserId
 import com.example.chatapp.domain.ext.profileImageUrl
 import com.example.chatapp.domain.model.Channel
 import com.example.chatapp.domain.model.User
+import com.example.chatapp.domain.usecase.LastOnlineTSFetcher
+import com.example.chatapp.helper.ext.isOnline
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.messaging.messaging
@@ -18,13 +21,16 @@ import com.streamliners.base.ext.execute
 import com.streamliners.base.taskState.taskStateOf
 import com.streamliners.base.taskState.update
 import com.streamliners.base.taskState.value
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.lang.System.currentTimeMillis
 
 class HomeViewModel(
     private val channelRepo: ChannelRepo,
     private val localRepo: LocalRepo,
-    private val userRepo: UserRepo
+    private val userRepo: UserRepo,
+    private val lastOnlineTSFetcher: LastOnlineTSFetcher
 ): BaseViewModel() {
 
     data class State(
@@ -32,7 +38,7 @@ class HomeViewModel(
         val user: User
     )
     val state = taskStateOf<State>()
-    private val userOnlineStatus = mutableStateMapOf<String, Boolean>()
+    val userOnlineStatus = mutableStateOf<Map<String, Boolean>>(emptyMap())
 
     fun start() {
         execute {
@@ -57,28 +63,25 @@ class HomeViewModel(
                 }
             state.update(State(channels, user))
 
-            checkUserOnlineStatus(users)
+            launch {
+                checkUserOnlineStatus(users)
+            }
 
             subscribeForGroupNotifications()
         }
     }
 
-    private fun checkUserOnlineStatus(users: List<User>) {
-        users.forEach { user ->
-            userOnlineStatus[user.id()] = user.lastOnlineTS.isOnline()
+    private suspend fun checkUserOnlineStatus(users: List<User>) {
+        lastOnlineTSFetcher.getOnlineStatusOfAllUsers().collectLatest { map ->
+            userOnlineStatus.value = map
         }
     }
 
     fun isChannelOneToOneAndOnline(channel: Channel): Boolean {
         return if (channel.type == Channel.Type.OneToOne) {
             val otherUserId = channel.otherUserId(state.value().user.id())
-            userOnlineStatus[otherUserId] ?: false
+            userOnlineStatus.value[otherUserId] ?: false
         } else false
-    }
-    private fun Timestamp?.isOnline(): Boolean {
-        return this?.let {
-            toDate().time + Constants.OnlineTSUpdater.EXPIRE_STATUS_INTERVAL >= currentTimeMillis()
-        } ?: false
     }
 
     private fun subscribeForGroupNotifications() {

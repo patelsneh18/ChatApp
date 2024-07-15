@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.chatapp.data.LocalRepo
-import com.example.chatapp.helper.navigateTo
+import com.example.chatapp.helper.ext.navigateTo
 import com.example.chatapp.ui.Screen
 import kotlinx.coroutines.launch
 import javax.inject.Inject

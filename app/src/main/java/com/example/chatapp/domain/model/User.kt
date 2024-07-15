@@ -13,7 +13,7 @@ data class User(
     var gender: Gender,
     var dob: String?,
     val fcmToken: String? = null,
-    val lastOnlineTS: Timestamp
+    val lastOnlineTS: Timestamp?
 ) {
-    constructor() : this(null, "", "",  "", "",Gender.Male, dob = null, null, Timestamp.now())
+    constructor() : this(null, "", "",  "", "",Gender.Male, dob = null, null, null)
 }

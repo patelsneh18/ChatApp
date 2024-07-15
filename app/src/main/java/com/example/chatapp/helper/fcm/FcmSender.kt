@@ -1,4 +1,4 @@
-package com.example.chatapp.helper
+package com.example.chatapp.helper.fcm
 
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.gson.Gson

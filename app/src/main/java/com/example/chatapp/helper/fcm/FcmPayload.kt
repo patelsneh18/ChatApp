@@ -1,4 +1,4 @@
-package com.example.chatapp.helper
+package com.example.chatapp.helper.fcm
 
 class FcmPayload(
     val message: FcmMessage

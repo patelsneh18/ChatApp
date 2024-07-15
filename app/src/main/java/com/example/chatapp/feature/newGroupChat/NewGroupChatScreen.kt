@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -18,23 +17,20 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.chatapp.feature.newGroupChat.comp.GroupInfoInput
 import com.example.chatapp.feature.newGroupChat.comp.MembersInput
-import com.example.chatapp.helper.navigateTo
+import com.example.chatapp.helper.ext.navigateTo
 import com.example.chatapp.ui.Screen
 import com.streamliners.base.taskState.comp.whenLoaded
 import com.streamliners.compose.android.comp.appBar.TitleBar
-import com.streamliners.compose.android.comp.appBar.TitleBarScaffold
 import com.streamliners.compose.comp.textInput.config.InputConfig
 import com.streamliners.compose.comp.textInput.config.text
 import com.streamliners.compose.comp.textInput.state.TextInputState
 import com.streamliners.compose.comp.textInput.state.ifValidInput
 import com.streamliners.compose.comp.textInput.state.nullableValue
-import com.streamliners.compose.comp.textInput.state.value
 import com.streamliners.pickers.media.PickedMedia
 
 @Composable

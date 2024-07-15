@@ -25,12 +25,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.chatapp.domain.ext.id
+import com.example.chatapp.domain.ext.otherUserId
+import com.example.chatapp.domain.model.Channel
 import com.example.chatapp.feature.home.comp.ChannelCard
 import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.theme.Primary
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.streamliners.base.taskState.comp.whenLoaded
+import com.streamliners.base.taskState.value
 import com.streamliners.compose.comp.CenterText
 import com.streamliners.helpers.NotificationHelper
 
@@ -103,7 +106,10 @@ fun HomeScreen(
                     items(data.channels) { channel ->
                             ChannelCard(
                                 channel = channel,
-                                isOnline = viewModel.isChannelOneToOneAndOnline(channel)
+                                isOnline = if (channel.type == Channel.Type.OneToOne) {
+                                    val otherUserId = channel.otherUserId(data.user.id())
+                                    viewModel.userOnlineStatus.value[otherUserId] ?: false
+                                } else false
                             ) {
                             navController.navigate(Screen.Chat(channel.id()).route)
                         }

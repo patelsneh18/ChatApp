@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import com.example.chatapp.data.LocalRepo
 import com.example.chatapp.data.remote.UserRepo
 import com.example.chatapp.domain.ext.id
-import com.example.chatapp.helper.navigateTo
+import com.example.chatapp.helper.ext.navigateTo
 import com.example.chatapp.ui.Screen
 import com.google.firebase.Firebase
 import com.google.firebase.messaging.messaging

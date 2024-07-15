@@ -8,6 +8,11 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObjects
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class UserRepo {
@@ -32,6 +37,33 @@ class UserRepo {
             .get()
             .await()
             .toObjects(User::class.java)
+    }
+
+    suspend fun getAllUsersFlow(): Flow<List<User>> {
+        return callbackFlow {
+            val registration = Firebase.firestore
+                .usersColl()
+                .addSnapshotListener { value, error ->
+                    //handle error
+                    error?.let {
+                        it.printStackTrace()
+                        error(it.message ?: "FirestoreException")
+                    }
+
+                    //Parse docs as List<User>
+                    val users = value?.toObjects(User::class.java) ?: error("Users not found")
+
+                    //Emit the list
+                    CoroutineScope(coroutineContext).launch {
+                        send(users)
+                    }
+                }
+
+            //Remove snapshot listener when coroutine cancels
+            awaitClose {
+                registration.remove()
+            }
+        }
     }
 
     suspend fun getUserWithEmail(email: String) : User? {

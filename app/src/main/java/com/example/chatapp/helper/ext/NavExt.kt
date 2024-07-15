@@ -1,4 +1,4 @@
-package com.example.chatapp.helper
+package com.example.chatapp.helper.ext
 
 import androidx.navigation.NavController
 import com.example.chatapp.ui.Screen

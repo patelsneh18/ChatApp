@@ -33,7 +33,7 @@ import com.example.chatapp.domain.model.Gender
 import com.example.chatapp.domain.model.User
 import com.example.chatapp.feature.editProfile.comp.ProfileImage
 import com.example.chatapp.helper.launchMediaPickerDialogForImage
-import com.example.chatapp.helper.navigateTo
+import com.example.chatapp.helper.ext.navigateTo
 import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.comp.AddImageButton
 import com.example.chatapp.ui.comp.ImageState

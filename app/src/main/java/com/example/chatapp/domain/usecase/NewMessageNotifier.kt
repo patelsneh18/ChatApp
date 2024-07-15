@@ -4,9 +4,9 @@ import com.example.chatapp.data.remote.OtherRepo
 import com.example.chatapp.data.remote.UserRepo
 import com.example.chatapp.feature.fcm.Notification
 import com.example.chatapp.helper.Base64Util
-import com.example.chatapp.helper.FcmMessage
-import com.example.chatapp.helper.FcmPayload
-import com.example.chatapp.helper.FcmSender
+import com.example.chatapp.helper.fcm.FcmMessage
+import com.example.chatapp.helper.fcm.FcmPayload
+import com.example.chatapp.helper.fcm.FcmSender
 
 class NewMessageNotifier (
     private val userRepo: UserRepo,
