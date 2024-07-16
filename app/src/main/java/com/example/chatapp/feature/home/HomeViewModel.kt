@@ -77,13 +77,6 @@ class HomeViewModel(
         }
     }
 
-    fun isChannelOneToOneAndOnline(channel: Channel): Boolean {
-        return if (channel.type == Channel.Type.OneToOne) {
-            val otherUserId = channel.otherUserId(state.value().user.id())
-            userOnlineStatus.value[otherUserId] ?: false
-        } else false
-    }
-
     private fun subscribeForGroupNotifications() {
         execute(false) {
             state.value()
