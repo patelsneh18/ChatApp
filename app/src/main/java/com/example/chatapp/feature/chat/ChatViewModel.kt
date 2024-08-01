@@ -6,6 +6,7 @@ import com.example.chatapp.data.remote.ChannelRepo
 import com.example.chatapp.data.remote.StorageRepo
 import com.example.chatapp.data.remote.UserRepo
 import com.example.chatapp.domain.ext.id
+import com.example.chatapp.domain.ext.otherUserId
 import com.example.chatapp.domain.model.Channel
 import com.example.chatapp.domain.model.Message
 import com.example.chatapp.domain.model.User
@@ -45,6 +46,8 @@ class ChatViewModel(
     class Data(
         val channel: Channel,
         val user: User,
+        val otherUser: User,
+        val isOtherUserOnline: Boolean,
         val chatListItems: List<ChatListItem>
     )
 
@@ -55,12 +58,22 @@ class ChatViewModel(
         execute {
             val user = localRepo.getLoggedInUser()
             //TODO: Fetch list only if Group Channel
-            val users = userRepo.getAllUsers()
             launch {
-                channelRepo.subscribeToChannel(channelId).collectLatest {
-                    val channel = channelRepo.getChannel(channelId)
+                val users = userRepo.getAllUsers()
+
+                channelRepo.subscribeToChannel(channelId).collectLatest { channel ->
+                    val otherUserId = channel.otherUserId(user.id())
+                    val otherUser = users.find { it.id() == otherUserId }
+                        ?: error("Other user not found")
+
                     data.update(
-                        Data(channel, user, createChatListItems(channel, user.id(), users))
+                        Data(
+                            channel,
+                            user,
+                            otherUser,
+                            true,
+                            createChatListItems(channel, user.id(), users)
+                        )
                     )
                 }
             }
