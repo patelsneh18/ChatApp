@@ -1,20 +1,16 @@
 package com.example.chatapp.feature.home
 
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import com.example.chatapp.data.LocalRepo
 import com.example.chatapp.data.remote.ChannelRepo
 import com.example.chatapp.data.remote.UserRepo
-import com.example.chatapp.domain.Constants
 import com.example.chatapp.domain.ext.id
 import com.example.chatapp.domain.ext.otherUserId
 import com.example.chatapp.domain.ext.profileImageUrl
 import com.example.chatapp.domain.model.Channel
 import com.example.chatapp.domain.model.User
 import com.example.chatapp.domain.usecase.LastOnlineTSFetcher
-import com.example.chatapp.helper.ext.isOnline
 import com.google.firebase.Firebase
-import com.google.firebase.Timestamp
 import com.google.firebase.messaging.messaging
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
@@ -24,7 +20,6 @@ import com.streamliners.base.taskState.value
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.lang.System.currentTimeMillis
 
 class HomeViewModel(
     private val channelRepo: ChannelRepo,
@@ -46,21 +41,7 @@ class HomeViewModel(
             val userId = localRepo.getLoggedInUser().id()
 
             val users = userRepo.getAllUsers()
-            val channels = channelRepo.getAllChannelsOf(userId)
-                .map { channel ->
-                    if (channel.type == Channel.Type.OneToOne) {
-                        val otherUserId = channel.otherUserId(userId)
-                        val otherUser = users.find { it.id() == otherUserId }
-                            ?: error("user with Id not found")
-
-                        channel.copy(
-                            name = otherUser.name,
-                            imageUrl = otherUser.profileImageUrl()
-                        )
-                    } else {
-                        channel
-                    }
-                }
+            val channels = channelRepo.getAllChannelsOf(users, userId)
             state.update(State(channels, user))
 
             launch {

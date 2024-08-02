@@ -1,13 +1,15 @@
 package com.example.chatapp.data.remote
 
-import androidx.compose.runtime.rememberCoroutineScope
 import com.example.chatapp.data.remote.FirestoreCollections.channelsColl
+import com.example.chatapp.domain.ext.id
+import com.example.chatapp.domain.ext.otherUserId
+import com.example.chatapp.domain.ext.profileImageUrl
 import com.example.chatapp.domain.model.Channel
 import com.example.chatapp.domain.model.Message
+import com.example.chatapp.domain.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
-import com.streamliners.pickers.media.PickedMedia
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -85,13 +87,29 @@ class ChannelRepo {
         return id
     }
 
-    suspend fun getAllChannelsOf(userId: String): List<Channel> {
+    suspend fun getAllChannelsOf(users: List<User>, userId: String): List<Channel> {
         return Firebase.firestore
             .channelsColl()
             .whereArrayContains(Channel::members.name, userId)
             .get()
             .await()
             .toObjects(Channel::class.java)
+            .map { transformChannel(it, users, userId) }
+    }
+
+    private fun transformChannel(channel: Channel, users: List<User>, userId: String): Channel {
+        return if (channel.type == Channel.Type.OneToOne) {
+            val otherUserId = channel.otherUserId(userId)
+            val otherUser = users.find { it.id() == otherUserId }
+                ?: error("user with Id not found")
+
+            channel.copy(
+                name = otherUser.name,
+                imageUrl = otherUser.profileImageUrl()
+            )
+        } else {
+            channel
+        }
     }
 
     suspend fun getChannel(channelId: String): Channel {
@@ -104,7 +122,7 @@ class ChannelRepo {
             ?: error("No channel found with ID $channelId")
     }
 
-    suspend fun subscribeToChannel(channelId: String): Flow<Channel> {
+    suspend fun subscribeToChannel(channelId: String, users: List<User>, id: String): Flow<Channel> {
         return callbackFlow {
             val registration = Firebase.firestore
                 .channelsColl()
@@ -114,7 +132,7 @@ class ChannelRepo {
                     val channel = snapshot?.toObject(Channel::class.java)
                     channel?.let {
                         CoroutineScope(coroutineContext).launch {
-                            send(it)
+                            send(transformChannel(it, users, id))
                         }
                     }
                 }

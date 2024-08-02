@@ -3,6 +3,7 @@ package com.example.chatapp.feature.chat
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -77,7 +78,10 @@ fun ChatScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Row {
+                    Row (
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
                         val data = remember {
                             derivedStateOf {
                                 viewModel.data.valueNullable()
@@ -85,7 +89,7 @@ fun ChatScreen(
                         }
                         AsyncImage(
                             //Todo: Try showing green dot on profile for online status
-                            uri = data.value?.user?.profileImageUrl() ?: "",
+                            uri = data.value?.channel?.imageUrl ?: "",
                             modifier = Modifier
                                 .size(42.dp)
                                 .clip(CircleShape)
@@ -99,7 +103,7 @@ fun ChatScreen(
 
                         Text(
                             modifier = Modifier.basicMarquee(),
-                            text = data.value?.user?.name ?: "Chat",
+                            text = data.value?.channel?.name ?: "Chat",
                             maxLines = 1
                         )
                     }

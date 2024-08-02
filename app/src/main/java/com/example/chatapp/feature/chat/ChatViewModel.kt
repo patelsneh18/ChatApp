@@ -10,6 +10,7 @@ import com.example.chatapp.domain.ext.otherUserId
 import com.example.chatapp.domain.model.Channel
 import com.example.chatapp.domain.model.Message
 import com.example.chatapp.domain.model.User
+import com.example.chatapp.domain.usecase.LastOnlineTSFetcher
 import com.example.chatapp.domain.usecase.NewMessageNotifier
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
@@ -26,7 +27,8 @@ class ChatViewModel(
     private val userRepo: UserRepo,
     private val localRepo: LocalRepo,
     private val storageRepo: StorageRepo,
-    private val newMessageNotifier: NewMessageNotifier
+    private val newMessageNotifier: NewMessageNotifier,
+    private val lastOnlineTSFetcher: LastOnlineTSFetcher
 ) : BaseViewModel() {
 
     sealed class ChatListItem {
@@ -43,10 +45,9 @@ class ChatViewModel(
         ) : ChatListItem()
     }
 
-    class Data(
+    data class Data(
         val channel: Channel,
         val user: User,
-        val otherUser: User,
         val isOtherUserOnline: Boolean,
         val chatListItems: List<ChatListItem>
     )
@@ -61,21 +62,34 @@ class ChatViewModel(
             launch {
                 val users = userRepo.getAllUsers()
 
-                channelRepo.subscribeToChannel(channelId).collectLatest { channel ->
-                    val otherUserId = channel.otherUserId(user.id())
-                    val otherUser = users.find { it.id() == otherUserId }
-                        ?: error("Other user not found")
-
+                channelRepo.subscribeToChannel(channelId, users, user.id()).collectLatest { channel ->
                     data.update(
                         Data(
                             channel,
                             user,
-                            otherUser,
                             true,
                             createChatListItems(channel, user.id(), users)
                         )
                     )
+
+                    if (channel.type == Channel.Type.OneToOne) {
+                        listenToOtherUserOnlineStatus(
+                            channel.otherUserId(user.id())
+                        )
+                    }
                 }
+            }
+        }
+    }
+
+    private fun listenToOtherUserOnlineStatus(otherUserId: String) {
+        execute(false) {
+            lastOnlineTSFetcher.getOnlineStatusOf(otherUserId).collectLatest {
+                data.update(
+                    data.value().copy(
+                        isOtherUserOnline = it
+                    )
+                )
             }
         }
     }
