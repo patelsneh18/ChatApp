@@ -3,6 +3,7 @@ package com.example.chatapp.feature.chat
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,8 +39,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.chatapp.R
+import com.example.chatapp.domain.ext.otherUserId
 import com.example.chatapp.domain.ext.profileImageUrl
 import com.example.chatapp.feature.chat.comp.MessagesList
+import com.example.chatapp.helper.ext.navigateTo
+import com.example.chatapp.ui.Screen
 import com.example.chatapp.ui.general.AsyncImage
 import com.example.chatapp.ui.theme.Green
 import com.streamliners.base.taskState.comp.whenLoaded
@@ -73,6 +77,12 @@ fun ChatScreen(
 
     val mediaPickerDialogState = rememberMediaPickerDialogState()
 
+    val data = remember {
+        derivedStateOf {
+            viewModel.data.valueNullable()
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -80,13 +90,14 @@ fun ChatScreen(
                 title = {
                     Row (
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        val data = remember {
-                            derivedStateOf {
-                                viewModel.data.valueNullable()
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.clickable {
+                            val otherUserId = data.value?.user?.id?.let {
+                                data.value?.channel?.otherUserId(it)
                             }
+                            navController.navigateTo(Screen.Profile(otherUserId?: "").route)
                         }
+                    ){
                         AsyncImage(
                             //Todo: Try showing green dot on profile for online status
                             uri = data.value?.channel?.imageUrl ?: "",

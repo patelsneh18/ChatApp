@@ -21,7 +21,7 @@ class LastOnlineTSFetcher(
     }
 
     private suspend fun initializeFlow() {
-        if (::flow.isInitialized) {
+        if (!::flow.isInitialized) {
             flow = userRepo.getAllUsersFlow().map { users ->
                 userOnlineStatus.toMutableMap().apply {
                     users.forEach { user ->

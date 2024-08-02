@@ -13,6 +13,7 @@ import com.example.chatapp.feature.home.HomeScreen
 import com.example.chatapp.feature.login.LoginScreen
 import com.example.chatapp.feature.newChat.NewChatScreen
 import com.example.chatapp.feature.newGroupChat.NewGroupChatScreen
+import com.example.chatapp.feature.profile.ProfileScreen
 import com.example.chatapp.feature.splash.SplashScreen
 import com.streamliners.base.ext.koinBaseViewModel
 import com.streamliners.pickers.date.showDatePickerDialog
@@ -77,6 +78,21 @@ fun MainActivity.ChatAppNavHost() {
             ChatScreen(
                 channelId = channelId,
                 navController = navController,
+                koinBaseViewModel()
+            )
+        }
+
+        composable(
+            Screen.Profile.format(),
+            arguments = listOf(
+                navArgument("userId") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val userId = it.arguments?.getString("userId") ?: error("userId argument not passed")
+            ProfileScreen(
+                userId,
                 koinBaseViewModel()
             )
         }

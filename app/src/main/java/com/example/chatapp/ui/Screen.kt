@@ -18,11 +18,20 @@ sealed class Screen(
     }
 
     class Chat(
-        val channelId: String
+        channelId: String
     ) : Screen("Chat?channelId=$channelId") {
 
         companion object {
             fun format() = "Chat?channelId={channelId}"
+        }
+    }
+
+    class Profile(
+        val userId: String
+    ) : Screen("Profile?userId=$userId") {
+
+        companion object {
+            fun format() = "Profile?userId={userId}"
         }
     }
 }

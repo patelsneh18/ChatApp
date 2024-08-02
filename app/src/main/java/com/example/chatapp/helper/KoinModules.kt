@@ -14,6 +14,7 @@ import com.example.chatapp.feature.home.HomeViewModel
 import com.example.chatapp.feature.login.LoginViewModel
 import com.example.chatapp.feature.newChat.NewChatViewModel
 import com.example.chatapp.feature.newGroupChat.NewGroupChatViewModel
+import com.example.chatapp.feature.profile.ProfileViewModel
 import com.example.chatapp.feature.splash.SplashViewModel
 import com.example.chatapp.helper.fcm.FcmSender
 import io.ktor.client.HttpClient
@@ -44,4 +45,5 @@ val viewModelModule = module{
     viewModel { NewGroupChatViewModel(get(), get(), get(), get()) }
     viewModel { HomeViewModel(get(), get(), get(), get()) }
     viewModel { ChatViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { ProfileViewModel(get()) }
 }
