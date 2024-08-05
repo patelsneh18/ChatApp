@@ -10,6 +10,7 @@ import com.example.chatapp.domain.usecase.LastOnlineTSUpdater
 import com.example.chatapp.domain.usecase.NewMessageNotifier
 import com.example.chatapp.feature.chat.ChatViewModel
 import com.example.chatapp.feature.editProfile.EditProfileViewModel
+import com.example.chatapp.feature.groupInfo.GroupInfoViewModel
 import com.example.chatapp.feature.home.HomeViewModel
 import com.example.chatapp.feature.login.LoginViewModel
 import com.example.chatapp.feature.newChat.NewChatViewModel
@@ -46,4 +47,5 @@ val viewModelModule = module{
     viewModel { HomeViewModel(get(), get(), get(), get()) }
     viewModel { ChatViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { ProfileViewModel(get()) }
+    viewModel { GroupInfoViewModel(get(), get()) }
 }

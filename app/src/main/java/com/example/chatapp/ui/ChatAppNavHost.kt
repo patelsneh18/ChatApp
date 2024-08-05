@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.example.chatapp.ui.main.MainActivity
 import com.example.chatapp.feature.chat.ChatScreen
 import com.example.chatapp.feature.editProfile.EditProfileScreen
+import com.example.chatapp.feature.groupInfo.GroupInfoScreen
 import com.example.chatapp.feature.home.HomeScreen
 import com.example.chatapp.feature.login.LoginScreen
 import com.example.chatapp.feature.newChat.NewChatScreen
@@ -93,6 +94,21 @@ fun MainActivity.ChatAppNavHost() {
             val userId = it.arguments?.getString("userId") ?: error("userId argument not passed")
             ProfileScreen(
                 userId,
+                koinBaseViewModel()
+            )
+        }
+
+        composable(
+            Screen.GroupInfo.format(),
+            arguments = listOf(
+                navArgument("channelId") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val channelId = it.arguments?.getString("channelId") ?: error("channelId argument not passed")
+            GroupInfoScreen(
+                channelId,
                 koinBaseViewModel()
             )
         }

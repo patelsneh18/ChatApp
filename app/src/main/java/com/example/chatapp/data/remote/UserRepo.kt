@@ -101,4 +101,21 @@ class UserRepo {
             .update(User::lastOnlineTS.name, Timestamp.now())
             .await()
     }
+
+    suspend fun getUsers(userIds: List<String>): List<User> {
+        val users = mutableListOf<User>()
+
+        userIds.forEach {
+            users.add(
+                Firebase.firestore
+                    .usersColl()
+                    .document(it)
+                    .get()
+                    .await()
+                    .toObject(User::class.java) ?: error("User not found with $it")
+            )
+        }
+
+        return users
+    }
 }

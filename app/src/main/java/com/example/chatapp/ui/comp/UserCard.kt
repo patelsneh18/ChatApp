@@ -1,6 +1,5 @@
 package com.example.chatapp.ui.comp
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,11 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chatapp.R
 import com.example.chatapp.domain.ext.profileImageUrl
-import com.example.chatapp.domain.model.Gender
 import com.example.chatapp.domain.model.User
 import com.example.chatapp.ui.general.AsyncImage
 import com.example.chatapp.ui.theme.Neutral50
@@ -32,8 +29,9 @@ fun UserCard(
     modifier: Modifier = Modifier,
     user: User,
     checked: Boolean? = null,
-    onCheckedChanged: (Boolean)-> Unit = {},
-    onClick: () -> Unit
+    onCheckedChanged: (Boolean) -> Unit = {},
+    onClick: () -> Unit,
+    showCheckBox: Boolean = true
 ) {
     Card (
         modifier = modifier,
@@ -69,8 +67,10 @@ fun UserCard(
                     color = Neutral50
                 )
             }
-            checked?.let {
-                Checkbox(checked = it, onCheckedChange = onCheckedChanged)
+            if (showCheckBox) {
+                checked?.let {
+                    Checkbox(checked = it, onCheckedChange = onCheckedChanged)
+                }
             }
         }
     }

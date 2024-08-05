@@ -41,7 +41,7 @@ fun NewChatScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(usersList) { user ->
-                    UserCard(user = user) {
+                    UserCard(user = user, onClick = {
                         viewModel.onUserSelected(
                             otherUserId = user.id()
                         ) { channelId ->
@@ -50,7 +50,7 @@ fun NewChatScreen(
                                 Screen.NewChat.route
                             )
                         }
-                    }
+                    })
                 }
             }
         }

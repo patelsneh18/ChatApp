@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -12,7 +13,11 @@ import com.example.chatapp.domain.ext.id
 import com.example.chatapp.domain.model.User
 import com.example.chatapp.ui.comp.UserCard
 
-fun LazyListScope.MembersInput(usersList: List<User>, members: SnapshotStateList<String>) {
+fun LazyListScope.MembersInput(
+    usersList: List<User>,
+    members: SnapshotStateList<String> = mutableStateListOf(),
+    showCheckBox: Boolean = true
+) {
     item {
         Text(
             modifier = Modifier
@@ -36,7 +41,8 @@ fun LazyListScope.MembersInput(usersList: List<User>, members: SnapshotStateList
                 if(members.contains(user.id())) members.remove(user.id())
                 else members.add(user.id())
             },
-            checked = members.contains(user.id())
+            checked = members.contains(user.id()),
+            showCheckBox = showCheckBox
         )
     }
 }

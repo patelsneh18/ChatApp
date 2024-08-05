@@ -41,6 +41,7 @@ import androidx.navigation.NavHostController
 import com.example.chatapp.R
 import com.example.chatapp.domain.ext.otherUserId
 import com.example.chatapp.domain.ext.profileImageUrl
+import com.example.chatapp.domain.model.Channel
 import com.example.chatapp.feature.chat.comp.MessagesList
 import com.example.chatapp.helper.ext.navigateTo
 import com.example.chatapp.ui.Screen
@@ -95,7 +96,9 @@ fun ChatScreen(
                             val otherUserId = data.value?.user?.id?.let {
                                 data.value?.channel?.otherUserId(it)
                             }
-                            navController.navigateTo(Screen.Profile(otherUserId?: "").route)
+                            if(data.value?.channel?.type == Channel.Type.OneToOne)
+                                navController.navigateTo(Screen.Profile(otherUserId?: "").route)
+                            else navController.navigateTo(Screen.GroupInfo(channelId).route)
                         }
                     ){
                         AsyncImage(

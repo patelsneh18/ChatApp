@@ -34,4 +34,13 @@ sealed class Screen(
             fun format() = "Profile?userId={userId}"
         }
     }
+
+    class GroupInfo(
+        val channelId: String
+    ) : Screen("GroupInfo?channelId=$channelId") {
+
+        companion object {
+            fun format() = "GroupInfo?channelId={channelId}"
+        }
+    }
 }
