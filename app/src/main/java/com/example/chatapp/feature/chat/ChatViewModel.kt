@@ -67,7 +67,7 @@ class ChatViewModel(
                         Data(
                             channel,
                             user,
-                            true,
+                            false,
                             createChatListItems(channel, user.id(), users)
                         )
                     )

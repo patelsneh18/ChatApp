@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.chatapp.R
+import com.example.chatapp.domain.ext.imageUrl
 import com.example.chatapp.domain.model.Channel
 import com.example.chatapp.ui.general.AsyncImage
 import com.example.chatapp.ui.theme.Green
@@ -42,7 +43,7 @@ fun ChannelCard(
         ){
             AsyncImage(
                 //Todo: Try showing green dot on profile for online status
-                uri = channel.imageUrl ?: "",
+                uri = channel.imageUrl(),
                 modifier = Modifier
                     .size(42.dp)
                     .clip(CircleShape)

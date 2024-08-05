@@ -2,16 +2,11 @@ package com.example.chatapp.feature.groupInfo
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -28,10 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.chatapp.R
 import com.example.chatapp.domain.ext.imageUrl
-import com.example.chatapp.domain.ext.profileImageUrl
-import com.example.chatapp.feature.newGroupChat.comp.GroupInfoInput
 import com.example.chatapp.feature.newGroupChat.comp.MembersInput
-import com.example.chatapp.feature.profile.comp.IconText
 import com.example.chatapp.ui.general.AsyncImage
 import com.example.chatapp.ui.theme.Primary
 import com.streamliners.base.taskState.comp.whenLoaded
@@ -89,7 +81,7 @@ fun GroupInfoScreen(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    MembersInput(viewModel.users, showCheckBox = false)
+                    MembersInput(viewModel.users, showCheckBox = false, userOnlineStatus = viewModel.userOnlineStatus)
                 }
             }
         }

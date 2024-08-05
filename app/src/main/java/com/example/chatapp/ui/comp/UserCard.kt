@@ -1,5 +1,6 @@
 package com.example.chatapp.ui.comp
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import com.example.chatapp.R
 import com.example.chatapp.domain.ext.profileImageUrl
 import com.example.chatapp.domain.model.User
 import com.example.chatapp.ui.general.AsyncImage
+import com.example.chatapp.ui.theme.Green
 import com.example.chatapp.ui.theme.Neutral50
 
 @Composable
@@ -31,7 +33,8 @@ fun UserCard(
     checked: Boolean? = null,
     onCheckedChanged: (Boolean) -> Unit = {},
     onClick: () -> Unit,
-    showCheckBox: Boolean = true
+    showCheckBox: Boolean = true,
+    userOnlineStatus: Boolean = false
 ) {
     Card (
         modifier = modifier,
@@ -48,7 +51,12 @@ fun UserCard(
                 uri = user.profileImageUrl(),
                 modifier = Modifier
                     .clip(CircleShape)
-                    .size(42.dp),
+                    .size(42.dp)
+                    .run {
+                        if (userOnlineStatus) {
+                            border(4.dp, Green, CircleShape)
+                        } else this
+                    },
                 placeholder = painterResource(id = R.drawable.ic_person)
             )
 

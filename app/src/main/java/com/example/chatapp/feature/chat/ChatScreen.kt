@@ -39,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.chatapp.R
+import com.example.chatapp.domain.ext.imageUrl
 import com.example.chatapp.domain.ext.otherUserId
 import com.example.chatapp.domain.ext.profileImageUrl
 import com.example.chatapp.domain.model.Channel
@@ -103,7 +104,7 @@ fun ChatScreen(
                     ){
                         AsyncImage(
                             //Todo: Try showing green dot on profile for online status
-                            uri = data.value?.channel?.imageUrl ?: "",
+                            uri = data.value?.channel?.imageUrl() ?: "",
                             modifier = Modifier
                                 .size(42.dp)
                                 .clip(CircleShape)
