@@ -2,18 +2,19 @@ package com.example.chatapp.feature.editProfile
 
 import androidx.core.net.toUri
 import com.example.chatapp.data.LocalRepo
+import com.example.chatapp.data.remote.FirestoreCollections.usersColl
 import com.example.chatapp.data.remote.StorageRepo
 import com.example.chatapp.data.remote.UserRepo
 import com.example.chatapp.domain.model.User
 import com.example.chatapp.ui.comp.ImageState
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import com.google.firebase.messaging.messaging
 import com.streamliners.base.BaseViewModel
 import com.streamliners.base.ext.execute
 import com.streamliners.base.ext.executeOnMain
 import com.streamliners.base.taskState.load
 import com.streamliners.base.taskState.taskStateOf
-import com.streamliners.pickers.media.PickedMedia
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -24,7 +25,6 @@ class EditProfileViewModel @Inject constructor(
 ): BaseViewModel() {
 
     val saveProfileTask = taskStateOf<Unit>()
-    val updateProfileTask = taskStateOf<Unit>()
     var currentUser: User? = null
 
     fun saveUser(
@@ -37,10 +37,12 @@ class EditProfileViewModel @Inject constructor(
 
                 val token = Firebase.messaging.token.await()
 
+                val userId = currentUser?.id ?: Firebase.firestore.usersColl().document().id
+
                 var updatedUser = user.copy(
-                    profileImageUrl = uploadProfileImage(user.email, image),
+                    profileImageUrl = uploadProfileImage(userId, image),
                     fcmToken = token,
-                    id = currentUser?.id
+                    id = userId
                 )
 
                 updatedUser = userRepo.upsertUser(updatedUser)
@@ -50,13 +52,13 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 
-    private suspend fun uploadProfileImage(email: String, imageState: ImageState): String? {
+    private suspend fun uploadProfileImage(userId: String, imageState: ImageState): String? {
         return when(imageState) {
             ImageState.Empty -> null
             is ImageState.Exists -> imageState.url
             is ImageState.New -> {
                 storageRepo.saveFile(
-                    path = "profileImages/$email.jpg",
+                    path = "profileImages/$userId.jpg",
                     uri = imageState.pickedMedia.uri.toUri()
                 )
             }
